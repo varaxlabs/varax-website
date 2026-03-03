@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://varax.io/sitemap-index.xml

@@ -1,0 +1,57 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+---
+
+<Base title="About" description="Varax Labs builds open-source Kubernetes tools. Our mission is to make Kubernetes compliance accessible to every team.">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
+    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-6">
+      About Varax Labs
+    </h1>
+
+    <div class="space-y-6 text-base text-light-text-secondary dark:text-dark-text-secondary leading-relaxed">
+      <p>
+        Varax Labs builds Kubernetes-native tools for operations teams. We believe that
+        monitoring and compliance shouldn't require expensive SaaS platforms, vendor lock-in,
+        or sending your cluster data to third parties.
+      </p>
+
+      <h2 class="text-xl font-semibold text-light-text dark:text-dark-text pt-4">Our Mission</h2>
+      <p>
+        Make Kubernetes compliance accessible to every team — from two-person startups to
+        enterprise platform teams. Compliance tooling should be as easy to install as any
+        other operator in your cluster.
+      </p>
+
+      <h2 class="text-xl font-semibold text-light-text dark:text-dark-text pt-4">Why We Built This</h2>
+      <p>
+        We spent years running production Kubernetes clusters and dealing with the same pain
+        points every team faces: CronJobs failing silently, compliance audits requiring weeks
+        of manual evidence gathering, and security benchmarks that nobody had time to check.
+      </p>
+      <p>
+        So we built the tools we wished existed. <strong class="text-light-text dark:text-dark-text">Varax Monitor</strong> solves
+        CronJob observability with one Helm command. <strong class="text-light-text dark:text-dark-text">Varax</strong> automates SOC2
+        compliance scanning and report generation — entirely within your cluster.
+      </p>
+
+      <h2 class="text-xl font-semibold text-light-text dark:text-dark-text pt-4">Open Source Commitment</h2>
+      <p>
+        Varax Monitor is free forever under the Apache 2.0 license. The Varax compliance
+        platform's core scanning engine is also open source. We believe in building trust
+        through transparency — you can read every line of code that runs in your cluster.
+      </p>
+      <p>
+        Our business model is simple: the free tools build community and trust. The commercial
+        compliance platform (Pro tier) generates revenue through audit-ready reporting features
+        that save teams weeks of manual work.
+      </p>
+    </div>
+
+    <div class="mt-12 flex flex-wrap gap-3">
+      <Button href="https://github.com/varaxlabs" variant="secondary" external>View our GitHub</Button>
+      <Button href="/monitor" variant="ghost">Explore Varax Monitor</Button>
+    </div>
+  </div>
+</Base>

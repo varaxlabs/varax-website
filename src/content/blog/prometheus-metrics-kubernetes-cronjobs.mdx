@@ -1,0 +1,164 @@
+---
+title: "Prometheus Metrics for Kubernetes CronJobs: A Complete Guide"
+description: "Everything you need to know about monitoring Kubernetes CronJobs with Prometheus — from basic kube-state-metrics queries to purpose-built CronJob exporters."
+date: 2026-02-20
+author: "Varax Labs"
+tags: ["prometheus", "kubernetes", "cronjobs", "monitoring", "grafana"]
+---
+
+Prometheus is the standard for Kubernetes monitoring, but CronJob observability is one of its weak spots out of the box. This guide covers everything you need to know about monitoring CronJobs with Prometheus — from the built-in metrics to custom exporters.
+
+## What kube-state-metrics Gives You
+
+If you're running Prometheus on Kubernetes, you almost certainly have [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) installed. It provides these CronJob-related metrics:
+
+### CronJob Metrics
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `kube_cronjob_info` | Gauge | Information about a CronJob (schedule, suspend status) |
+| `kube_cronjob_labels` | Gauge | CronJob labels |
+| `kube_cronjob_created` | Gauge | Creation timestamp |
+| `kube_cronjob_next_schedule_time` | Gauge | Next scheduled run (Unix timestamp) |
+| `kube_cronjob_status_active` | Gauge | Number of currently running jobs |
+| `kube_cronjob_status_last_schedule_time` | Gauge | Last scheduled time (not last success!) |
+| `kube_cronjob_spec_suspend` | Gauge | Whether the CronJob is suspended |
+
+### Job Metrics
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `kube_job_info` | Gauge | Information about a Job |
+| `kube_job_owner` | Gauge | Job's owner reference (links to CronJob) |
+| `kube_job_status_succeeded` | Gauge | Number of succeeded pods |
+| `kube_job_status_failed` | Gauge | Number of failed pods |
+| `kube_job_status_active` | Gauge | Number of active pods |
+| `kube_job_complete` | Gauge | Whether the job completed |
+| `kube_job_status_completion_time` | Gauge | Completion timestamp |
+| `kube_job_status_start_time` | Gauge | Start timestamp |
+
+## Useful PromQL Queries
+
+### Last Execution Status per CronJob
+
+This requires joining CronJob and Job metrics, which is the biggest pain point:
+
+```text
+# Check if the most recent job for each CronJob succeeded
+kube_job_status_succeeded{job_name=~".*"}
+  * on(job_name) group_left(owner_name)
+  kube_job_owner{owner_name=~".*", owner_kind="CronJob"}
+```
+
+### CronJob Execution Duration
+
+```text
+# Duration of the last completed job
+(kube_job_status_completion_time - kube_job_status_start_time)
+  * on(job_name) group_left(owner_name)
+  kube_job_owner{owner_kind="CronJob"}
+```
+
+### Detect Missed Schedules
+
+```text
+# CronJobs where the last schedule time is older than expected
+time() - kube_cronjob_status_last_schedule_time > 86400
+```
+
+This is approximate — it compares current time to last schedule, but doesn't account for the CronJob's actual schedule interval.
+
+### Failed CronJobs in the Last Hour
+
+```text
+# Jobs owned by CronJobs that have failed pods
+kube_job_status_failed > 0
+  unless on(job_name) (kube_job_status_succeeded > 0)
+  * on(job_name) group_left(owner_name)
+  kube_job_owner{owner_kind="CronJob"}
+```
+
+## The Gaps in kube-state-metrics
+
+While kube-state-metrics provides raw data, it has significant limitations for CronJob monitoring:
+
+1. **No direct CronJob success/failure metric** — you have to join across Job and CronJob metrics
+2. **No execution counter** — you can't easily count total executions over time
+3. **No duration tracking** — calculating duration requires joining start and completion times
+4. **No true missed schedule detection** — you can approximate it, but it's unreliable
+5. **High cardinality** — Job names include timestamps (e.g., `nightly-backup-28486760`), which creates new time series constantly
+
+## Purpose-Built CronJob Metrics with Varax Monitor
+
+[Varax Monitor](/monitor) was built to fill exactly these gaps. It watches CronJob executions directly and exports clean, purpose-built metrics:
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `cronjob_last_execution_status` | Gauge | 1=success, 0=failure per CronJob |
+| `cronjob_last_execution_duration_seconds` | Gauge | Duration of last execution |
+| `cronjob_execution_total` | Counter | Total executions by success/failure |
+| `cronjob_missed_schedules_total` | Counter | Total missed schedules |
+| `cronjob_next_schedule_time` | Gauge | Next expected execution time |
+| `cronjob_is_suspended` | Gauge | Suspension status |
+
+These metrics are labeled by CronJob name and namespace — no complex joins required.
+
+### Example: Alert on Any Failed CronJob
+
+With kube-state-metrics:
+
+```text
+# Complex multi-metric join
+kube_job_status_failed > 0
+  unless on(job_name) (kube_job_status_succeeded > 0)
+  * on(job_name) group_left(owner_name)
+  kube_job_owner{owner_kind="CronJob"}
+```
+
+With Varax Monitor:
+
+```text
+# Direct, simple query
+cronjob_last_execution_status == 0
+```
+
+### Example: CronJobs Running Longer Than Usual
+
+With kube-state-metrics:
+
+```text
+# Requires multiple joins and history comparison
+(kube_job_status_completion_time - kube_job_status_start_time)
+  * on(job_name) group_left(owner_name)
+  kube_job_owner{owner_kind="CronJob"}
+  > 300
+```
+
+With Varax Monitor:
+
+```text
+cronjob_last_execution_duration_seconds > 300
+```
+
+## Setting Up a Complete Dashboard
+
+Whether you use kube-state-metrics alone or Varax Monitor, your Grafana dashboard should include:
+
+1. **Overview table** — all CronJobs with last status, last run time, and next scheduled time
+2. **Failure timeline** — when and which CronJobs have failed
+3. **Duration trends** — execution time over the last 7 days per CronJob
+4. **Missed schedule alerts** — any CronJobs that didn't fire when expected
+5. **Active jobs** — currently running CronJob executions
+
+Varax Monitor includes a pre-built Grafana dashboard with all of these panels. Install it with one command and customize as needed.
+
+## Getting Started
+
+If you want the simplest path to CronJob observability:
+
+```bash
+helm repo add varaxlabs https://charts.varax.io
+helm install varax-monitor varaxlabs/varax-monitor
+```
+
+It's free, open-source (Apache 2.0), and deploys in under 60 seconds. [Read the full quickstart](/docs/monitor/quickstart).

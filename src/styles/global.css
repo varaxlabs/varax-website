@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand Accent */
+  --color-accent: #E85D3A;
+  --color-accent-light: #FF7A55;
+  --color-accent-dark: #C4432A;
+  --color-accent-red: #D94E2B;
+
+  /* Dark Theme Neutrals */
+  --color-dark-bg: #0A0E13;
+  --color-dark-surface: #0F1419;
+  --color-dark-border: #1E2832;
+  --color-dark-text-secondary: #5A6A7A;
+  --color-dark-text: #E8E1D9;
+
+  /* Light Theme Neutrals */
+  --color-light-bg: #F4F1EC;
+  --color-light-surface: #FAFAF7;
+  --color-light-border: #E8E2D8;
+  --color-light-text-secondary: #8A8078;
+  --color-light-text: #1A1F28;
+
+  /* Semantic */
+  --color-success: #4ADE80;
+  --color-warning: #FACC15;
+  --color-error: #F87171;
+  --color-info: #60A5FA;
+
+  /* Fonts */
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* Base styles */
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-light-bg text-light-text;
+}
+
+.dark body {
+  @apply bg-dark-bg text-dark-text;
+}
+
+/* Prose styles for MDX content */
+.prose {
+  @apply max-w-none;
+  line-height: 1.75;
+}
+
+.prose h1 {
+  @apply text-2xl font-semibold mb-4 mt-8;
+}
+
+.prose h2 {
+  @apply text-xl font-semibold mb-3 mt-6;
+}
+
+.prose h3 {
+  @apply text-lg font-semibold mb-2 mt-5;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose a {
+  @apply text-accent hover:text-accent-light underline;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose li {
+  @apply mb-1;
+}
+
+.prose code {
+  @apply font-mono text-sm bg-dark-surface text-dark-text px-1.5 py-0.5 rounded;
+}
+
+.prose pre {
+  @apply font-mono text-sm bg-dark-surface text-dark-text p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-accent pl-4 italic my-4;
+}
+
+.prose table {
+  @apply w-full mb-4 text-sm;
+}
+
+.prose thead {
+  @apply border-b border-light-border;
+}
+
+.dark .prose thead {
+  @apply border-dark-border;
+}
+
+.prose th {
+  @apply text-left py-2 px-3 font-semibold;
+}
+
+.prose td {
+  @apply py-2 px-3 border-b border-light-border;
+}
+
+.dark .prose td {
+  @apply border-dark-border;
+}
+
+.prose img {
+  @apply rounded-lg my-4;
+}
+
+.prose hr {
+  @apply border-light-border my-8;
+}
+
+.dark .prose hr {
+  @apply border-dark-border;
+}

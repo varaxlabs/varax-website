@@ -1,0 +1,90 @@
+---
+title: "Monitor All Your Kubernetes CronJobs in 60 Seconds"
+description: "How to set up complete CronJob monitoring with Prometheus metrics, Grafana dashboards, and alerting — with a single Helm command."
+date: 2026-03-01
+author: "Varax Labs"
+tags: ["kubernetes", "monitoring", "cronjobs", "prometheus"]
+---
+
+If you're running CronJobs on Kubernetes, you probably don't have great visibility into whether they're actually working. Most teams discover failures when something downstream breaks — a missing report, stale data, or an angry Slack message from a stakeholder.
+
+In this post, we'll show you how to get complete CronJob observability in your cluster in under 60 seconds using [Varax Monitor](https://github.com/varaxlabs/varax-monitor), a free, open-source tool that automatically discovers and monitors every CronJob.
+
+## The Problem with CronJob Monitoring
+
+Kubernetes provides basic CronJob status through `kubectl`, but it has significant gaps:
+
+- **No historical data** — `kubectl get cronjobs` shows the last schedule time, but not whether it succeeded
+- **No alerting** — you have to manually check or build custom monitoring
+- **No duration tracking** — you can't tell if a job that usually takes 30 seconds suddenly takes 10 minutes
+- **No missed schedule detection** — if a CronJob doesn't fire, Kubernetes doesn't tell you
+
+You can build all of this yourself with PromQL queries against kube-state-metrics, but it takes hours of query writing and dashboard building.
+
+## The One-Command Solution
+
+Varax Monitor handles all of this automatically:
+
+```bash
+helm repo add varaxlabs https://charts.varax.io
+helm install varax-monitor varaxlabs/varax-monitor
+```
+
+Within seconds, Varax Monitor:
+
+1. **Discovers every CronJob** in your cluster using Kubernetes Informers
+2. **Tracks executions** — success, failure, duration, and timing
+3. **Exports Prometheus metrics** — clean, well-labeled, ready for your existing stack
+4. **Detects missed schedules** — knows when a CronJob should have fired but didn't
+
+No per-job configuration. No annotations. No YAML to write. It just works.
+
+## What You Get
+
+### Prometheus Metrics
+
+Varax Monitor exports these metrics for every CronJob in your cluster:
+
+| Metric | What it tells you |
+|--------|-------------------|
+| `cronjob_last_execution_status` | Did the last run succeed? (1=yes, 0=no) |
+| `cronjob_last_execution_duration_seconds` | How long did it take? |
+| `cronjob_execution_total` | Total runs, labeled by success/failure |
+| `cronjob_missed_schedules_total` | How many scheduled runs were missed |
+| `cronjob_next_schedule_time` | When is the next expected run |
+| `cronjob_is_suspended` | Is the CronJob currently suspended |
+
+### Grafana Dashboard
+
+Import the included dashboard to see all your CronJobs in one view:
+
+- Execution timeline with success/failure coloring
+- Duration trends per job
+- Failure rate over time
+- Missed schedule alerts
+
+### Pre-Built Alert Rules
+
+Copy-paste alert rules for the most common failure modes:
+
+- Job execution failed
+- Missed scheduled execution
+- Execution duration exceeded threshold
+- Job stuck in running state
+
+## Resource Footprint
+
+Varax Monitor is designed to be invisible in your cluster:
+
+- **Memory**: less than 50MB
+- **CPU**: less than 0.05 cores
+- **Storage**: None (stateless)
+- **Access**: Read-only cluster role
+
+## Getting Started
+
+Full installation guide: [Varax Monitor Quickstart](/docs/monitor/quickstart)
+
+GitHub: [github.com/varaxlabs/varax-monitor](https://github.com/varaxlabs/varax-monitor)
+
+It's Apache 2.0 licensed — free forever, no strings attached.

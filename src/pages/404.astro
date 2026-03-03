@@ -1,0 +1,36 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+---
+
+<Base title="404 — Not Found">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
+    <!-- Terminal-themed 404 -->
+    <div class="rounded-lg overflow-hidden border border-dark-border bg-dark-surface shadow-2xl max-w-md mx-auto mb-10">
+      <div class="flex items-center gap-2 px-4 py-2.5 border-b border-dark-border bg-dark-bg">
+        <div class="flex gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#FEBC2E]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+        </div>
+        <span class="text-xs text-dark-text-secondary font-mono ml-2">terminal</span>
+      </div>
+      <div class="p-6 font-mono text-sm text-left">
+        <p class="text-dark-text-secondary">$ curl varax.io{Astro.url.pathname}</p>
+        <p class="text-error mt-2">Error: 404 — command not found</p>
+        <p class="text-dark-text-secondary mt-4">$ <span class="animate-pulse">_</span></p>
+      </div>
+    </div>
+
+    <h1 class="text-2xl font-semibold text-light-text dark:text-dark-text mb-3">
+      Page not found
+    </h1>
+    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-8">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <Button href="/">Back to Home</Button>
+      <Button href="/docs" variant="secondary">Browse Docs</Button>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,91 @@
+---
+title: "Why Your Kubernetes CronJobs Are Failing Silently"
+description: "CronJobs are one of the most under-monitored resources in Kubernetes. Here's why they fail without anyone noticing, and what to do about it."
+date: 2026-02-25
+author: "Varax Labs"
+tags: ["kubernetes", "cronjobs", "reliability", "devops"]
+---
+
+CronJobs are the workhorses of Kubernetes operations. Database backups, report generation, cache warming, data pipelines, certificate rotation — they run constantly in the background, and everyone assumes they're working.
+
+Until they're not.
+
+## The Silent Failure Problem
+
+Unlike a crashed Deployment that triggers pod restart alerts, a failed CronJob often produces no signal at all. Here's why:
+
+### 1. Kubernetes Doesn't Alert on CronJob Failures
+
+When a CronJob's pod fails, Kubernetes records the failure in the Job status — but it doesn't send a notification. The CronJob controller simply waits for the next scheduled execution. If your nightly backup failed last night, you won't know unless you check manually.
+
+### 2. `kubectl get cronjobs` Is Misleading
+
+The default output shows `LAST SCHEDULE`, not `LAST SUCCESS`. A CronJob can be "scheduling" regularly while every execution fails:
+
+```
+NAME              SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE
+nightly-backup    0 2 * * *   False     0        8h
+report-gen        0 6 * * *   False     0        14h
+```
+
+Looks healthy, right? Both could be failing every single run. You can't tell from this output.
+
+### 3. Pod Logs Disappear
+
+Failed CronJob pods are cleaned up by the `failedJobsHistoryLimit` (default: 1). Once the next run completes, the previous failure's logs are gone. If you're not aggregating logs, the evidence of the failure disappears.
+
+### 4. Missed Schedules Are Invisible
+
+If the CronJob controller is overwhelmed, or the cluster was briefly down during a scheduled time, the CronJob might not fire at all. Kubernetes has a `startingDeadlineSeconds` field to handle this, but by default it's unset — meaning missed schedules are silently dropped.
+
+## Real-World Consequences
+
+Here are scenarios we've seen (or lived through):
+
+- **Database backup CronJob silently failing for 3 weeks** — discovered when the team needed to restore from backup during an incident
+- **Report generation job running but producing empty output** — the pod "succeeded" with exit code 0, but the application logic had a bug
+- **Certificate rotation job failing due to expired API token** — the cert expired before anyone noticed the CronJob was broken
+- **Data pipeline missing runs during cluster upgrades** — nobody realized the nightly ETL job didn't fire during the maintenance window
+
+## How to Fix It
+
+### Option 1: DIY Prometheus Monitoring
+
+If you're already running Prometheus with kube-state-metrics, you can write PromQL queries:
+
+```text
+# Alert on failed CronJobs
+kube_job_status_failed{job_name=~".*"} > 0
+```
+
+The problem: kube-state-metrics provides job-level metrics, but the CronJob-level view requires complex queries that join across multiple metrics. You'll spend hours building the dashboards and alerts you need.
+
+### Option 2: Use Varax Monitor
+
+[Varax Monitor](/monitor) was built specifically for this problem. One Helm command gives you:
+
+- Automatic discovery of every CronJob in your cluster
+- Per-CronJob success/failure tracking
+- Duration monitoring
+- Missed schedule detection
+- Pre-built Grafana dashboards and alert rules
+
+```bash
+helm install varax-monitor varaxlabs/varax-monitor
+```
+
+It's free, open-source (Apache 2.0), and uses less than 50MB of memory.
+
+### Regardless of Tooling, Do These Things
+
+1. **Set `failedJobsHistoryLimit` to at least 3** — gives you more debugging history
+2. **Set `startingDeadlineSeconds`** — so Kubernetes catches missed schedules
+3. **Always check exit codes** — make sure your CronJob scripts `exit 1` on failure, not `exit 0`
+4. **Aggregate logs** — ship CronJob pod logs to a centralized system before pods are garbage collected
+5. **Monitor the output, not just the exit code** — a job that "succeeds" but produces no output is still broken
+
+## Stop Assuming They Work
+
+CronJobs are critical infrastructure that runs without supervision. That's exactly why they need monitoring. The next time someone asks "has the nightly backup been running?", you should be able to answer instantly — not by SSH-ing into a cluster and running `kubectl describe`.
+
+[Get started with Varax Monitor](/docs/monitor/quickstart) — it takes 60 seconds.

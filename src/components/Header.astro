@@ -1,0 +1,154 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { label: 'Docs', href: '/docs' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'GitHub', href: 'https://github.com/varaxlabs', external: true },
+];
+
+const products = [
+  { label: 'Varax Compliance', description: 'Automated SOC2 compliance for Kubernetes', href: '/' },
+  { label: 'Varax Monitor', description: 'Free Kubernetes CronJob monitoring', href: '/monitor', badge: 'Free' },
+];
+---
+
+<header class="sticky top-0 z-50 border-b border-light-border dark:border-dark-border bg-light-bg/80 dark:bg-dark-bg/80 backdrop-blur-md">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-3 shrink-0" aria-label="Varax Labs home">
+      <!-- Dark mode logo (inline SVG) -->
+      <svg class="hidden dark:block h-8 w-auto" viewBox="0 0 300 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,0)">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+            <polygon points="32,4 8,16 8,36 32,60 56,36 56,16" fill="#0F1419" stroke="#1E2832" stroke-width="0.50"/>
+            <polygon points="32,12 16,20 16,34 32,50 48,34 48,20" fill="none" stroke="#2A3544" stroke-width="0.80"/>
+            <polyline points="22,20 32,42 42,20" fill="none" stroke="#E85D3A" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </g>
+        <text x="64" y="30" font-family="DM Sans, sans-serif" font-weight="600" font-size="18" letter-spacing="0.04em" fill="#E8E1D9">VARAX<tspan font-weight="400" fill-opacity="0.45"> LABS</tspan></text>
+      </svg>
+      <!-- Light mode logo (inline SVG) -->
+      <svg class="block dark:hidden h-8 w-auto" viewBox="0 0 300 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0,0)">
+          <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+            <polygon points="32,4 8,16 8,36 32,60 56,36 56,16" fill="#E8E8E0" stroke="#E8E2D8" stroke-width="0.50"/>
+            <polygon points="32,12 16,20 16,34 32,50 48,34 48,20" fill="none" stroke="#B0A898" stroke-width="0.80"/>
+            <polyline points="22,20 32,42 42,20" fill="none" stroke="#E85D3A" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </g>
+        <text x="64" y="30" font-family="DM Sans, sans-serif" font-weight="600" font-size="18" letter-spacing="0.04em" fill="#1A1F28">VARAX<tspan font-weight="400" fill-opacity="0.45"> LABS</tspan></text>
+      </svg>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1">
+      <!-- Products Dropdown -->
+      <div class="relative group">
+        <button class="flex items-center gap-1 px-3 py-2 text-sm text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text dark:hover:text-dark-text transition-colors">
+          Products
+          <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+          <div class="w-72 rounded-lg border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface shadow-lg p-2">
+            {products.map((product) => (
+              <a href={product.href} class="flex items-start gap-3 p-3 rounded-md hover:bg-light-bg dark:hover:bg-dark-bg transition-colors">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-light-text dark:text-dark-text">{product.label}</span>
+                    {product.badge && (
+                      <span class="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent/10 text-accent">{product.badge}</span>
+                    )}
+                  </div>
+                  <p class="text-xs text-light-text-secondary dark:text-dark-text-secondary mt-0.5">{product.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="px-3 py-2 text-sm text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text dark:hover:text-dark-text transition-colors"
+          {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <!-- Right side -->
+    <div class="flex items-center gap-2">
+      <ThemeToggle />
+      <a
+        href="/docs/monitor/quickstart"
+        class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:bg-accent-light transition-colors"
+      >
+        Get Started
+      </a>
+      <!-- Mobile menu toggle -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="md:hidden p-2 rounded-lg text-light-text-secondary dark:text-dark-text-secondary hover:bg-light-border dark:hover:bg-dark-border transition-colors"
+        aria-label="Toggle menu"
+      >
+        <svg class="w-5 h-5" id="menu-open-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg class="w-5 h-5 hidden" id="menu-close-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg">
+    <div class="px-4 py-4 space-y-1">
+      <p class="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-light-text-secondary dark:text-dark-text-secondary">Products</p>
+      {products.map((product) => (
+        <a href={product.href} class="block px-3 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-surface dark:hover:bg-dark-surface rounded-md">
+          {product.label}
+          {product.badge && <span class="ml-2 text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent/10 text-accent">{product.badge}</span>}
+        </a>
+      ))}
+      <div class="border-t border-light-border dark:border-dark-border my-2"></div>
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="block px-3 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-surface dark:hover:bg-dark-surface rounded-md"
+          {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="border-t border-light-border dark:border-dark-border my-2"></div>
+      <a href="/docs/monitor/quickstart" class="block px-3 py-2 text-sm font-semibold text-accent">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  function initMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const openIcon = document.getElementById('menu-open-icon');
+    const closeIcon = document.getElementById('menu-close-icon');
+    if (!btn || !menu || !openIcon || !closeIcon) return;
+
+    btn.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      openIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+  }
+
+  initMobileMenu();
+  document.addEventListener('astro:after-swap', initMobileMenu);
+</script>

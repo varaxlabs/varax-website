@@ -1,0 +1,128 @@
+---
+title: Quickstart
+description: Install Varax Monitor and start monitoring every CronJob in your cluster in 60 seconds.
+section: monitor
+order: 1
+---
+
+## Prerequisites
+
+- A running Kubernetes cluster (v1.21+)
+- [Helm](https://helm.sh/) v3 installed
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) configured to access your cluster
+- Prometheus installed in your cluster (e.g., via [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack))
+
+## Install Varax Monitor
+
+Add the Varax Helm repository and install the chart:
+
+```bash
+helm repo add varaxlabs https://charts.varax.io
+helm repo update
+helm install varax-monitor varaxlabs/varax-monitor
+```
+
+That's it. Varax Monitor will automatically discover every CronJob in your cluster and start exporting Prometheus metrics.
+
+## Verify Installation
+
+Check that the pod is running:
+
+```bash
+kubectl get pods -l app.kubernetes.io/name=varax-monitor
+```
+
+You should see output like:
+
+```
+NAME                             READY   STATUS    RESTARTS   AGE
+varax-monitor-7f8b9c6d4f-x2k9p  1/1     Running   0          30s
+```
+
+Verify metrics are being exported:
+
+```bash
+kubectl port-forward svc/varax-monitor 9090:9090
+curl http://localhost:9090/metrics | grep cronjob_
+```
+
+You should see metrics like `cronjob_last_execution_status`, `cronjob_execution_total`, and others for each CronJob in your cluster.
+
+## Import the Grafana Dashboard
+
+If you're running Grafana (included with kube-prometheus-stack), import the pre-built dashboard:
+
+1. Open Grafana in your browser
+2. Go to **Dashboards** > **Import**
+3. Enter dashboard ID: `varax-monitor` (or paste the JSON from the [GitHub repo](https://github.com/varaxlabs/varax-monitor/tree/main/dashboards))
+4. Select your Prometheus data source
+5. Click **Import**
+
+You'll see a dashboard showing all CronJobs with execution history, success rates, and duration trends.
+
+## Set Up Alerts
+
+Varax Monitor includes pre-configured alert rules for Prometheus AlertManager. Copy the alert rules into your AlertManager configuration:
+
+```yaml
+groups:
+  - name: varax-monitor
+    rules:
+      - alert: CronJobFailed
+        expr: cronjob_last_execution_status == 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} failed"
+          description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} has failed its last execution."
+
+      - alert: CronJobMissedSchedule
+        expr: increase(cronjob_missed_schedules_total[1h]) > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} missed schedule"
+          description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} has missed one or more scheduled executions."
+
+      - alert: CronJobSlowExecution
+        expr: cronjob_last_execution_duration_seconds > 300
+        for: 0m
+        labels:
+          severity: info
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} running slowly"
+          description: "CronJob {{ $labels.cronjob }} took {{ $value }}s to execute (threshold: 300s)."
+```
+
+## Configuration Options
+
+Varax Monitor works with zero configuration, but you can customize its behavior via Helm values:
+
+```yaml
+# values.yaml
+namespaces: []          # Monitor all namespaces (default) or specify a list
+metricsPort: 9090       # Port for the metrics endpoint
+logLevel: info          # Log verbosity: debug, info, warn, error
+resources:
+  requests:
+    memory: 32Mi
+    cpu: 10m
+  limits:
+    memory: 64Mi
+    cpu: 50m
+```
+
+Install with custom values:
+
+```bash
+helm install varax-monitor varaxlabs/varax-monitor -f values.yaml
+```
+
+## Next Steps
+
+- Browse the full [metrics reference](/docs/monitor/metrics) to understand every metric exported
+- Customize your [Grafana dashboards](/docs/monitor/dashboards)
+- Fine-tune your [alert rules](/docs/monitor/alerts)
+- Check out [Varax Compliance](/) for SOC2 automation

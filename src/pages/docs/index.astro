@@ -1,0 +1,42 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+---
+
+<Base title="Documentation" description="Varax documentation hub. Guides and references for Varax Monitor and Varax Compliance.">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-4">Documentation</h1>
+    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-12">
+      Guides, references, and tutorials for Varax products.
+    </p>
+
+    <div class="grid sm:grid-cols-2 gap-6">
+      <!-- Monitor Docs -->
+      <a href="/docs/monitor/quickstart" class="group block p-6 rounded-xl border border-light-border dark:border-dark-border hover:border-accent/50 transition-colors">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-sm font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-accent/10 text-accent">Free</span>
+        </div>
+        <h2 class="text-lg font-semibold text-light-text dark:text-dark-text group-hover:text-accent transition-colors mb-2">
+          Varax Monitor
+        </h2>
+        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-4">
+          Kubernetes CronJob monitoring with Prometheus. Quickstart, metrics reference, dashboards, and alert rules.
+        </p>
+        <span class="text-sm text-accent font-medium">Get started &rarr;</span>
+      </a>
+
+      <!-- Compliance Docs (coming soon) -->
+      <div class="p-6 rounded-xl border border-light-border dark:border-dark-border opacity-60">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-sm font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-light-border dark:bg-dark-border text-light-text-secondary dark:text-dark-text-secondary">Coming Soon</span>
+        </div>
+        <h2 class="text-lg font-semibold text-light-text dark:text-dark-text mb-2">
+          Varax Compliance
+        </h2>
+        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+          SOC2 compliance automation for Kubernetes. Installation, configuration, scanning, reports, and remediation.
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>

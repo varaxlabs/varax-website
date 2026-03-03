@@ -1,0 +1,61 @@
+---
+---
+
+<div class="rounded-lg overflow-hidden border border-dark-border bg-dark-surface shadow-2xl max-w-2xl mx-auto">
+  <!-- Title bar -->
+  <div class="flex items-center gap-2 px-4 py-2.5 border-b border-dark-border bg-dark-bg">
+    <div class="flex gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+      <span class="w-3 h-3 rounded-full bg-[#FEBC2E]"></span>
+      <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+    </div>
+    <span class="text-xs text-dark-text-secondary font-mono ml-2">terminal</span>
+  </div>
+  <!-- Terminal content with CSS-only staggered animation -->
+  <div class="p-4 sm:p-6 font-mono text-sm leading-relaxed">
+    <div class="terminal-line" style="--delay: 0">
+      <span class="text-accent">$</span>
+      <span class="text-dark-text"> helm install varax-monitor varaxlabs/varax-monitor</span>
+    </div>
+    <div class="terminal-line text-dark-text-secondary" style="--delay: 1">
+      NAME: varax-monitor
+    </div>
+    <div class="terminal-line text-dark-text-secondary" style="--delay: 2">
+      STATUS: deployed
+    </div>
+    <div class="terminal-line text-dark-text-secondary" style="--delay: 3">
+      REVISION: 1
+    </div>
+    <div class="terminal-line mt-3" style="--delay: 4">
+      <span class="text-accent">$</span>
+      <span class="text-dark-text"> kubectl get pods -l app=varax-monitor</span>
+    </div>
+    <div class="terminal-line text-dark-text-secondary" style="--delay: 5">
+      NAME &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;READY &nbsp; STATUS
+    </div>
+    <div class="terminal-line" style="--delay: 6">
+      <span class="text-dark-text-secondary">varax-monitor-7f8b9c &nbsp; &nbsp;1/1 &nbsp; &nbsp;</span><span class="text-success">Running</span>
+    </div>
+    <div class="terminal-line mt-3" style="--delay: 7">
+      <span class="text-success">&#10003;</span>
+      <span class="text-dark-text"> Monitoring 14 CronJobs across 3 namespaces</span>
+    </div>
+    <div class="terminal-line" style="--delay: 8">
+      <span class="text-success">&#10003;</span>
+      <span class="text-dark-text"> Prometheus metrics exposed on :9090/metrics</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .terminal-line {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
+    animation-delay: calc(var(--delay) * 0.3s);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

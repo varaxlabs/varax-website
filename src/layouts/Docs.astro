@@ -1,0 +1,65 @@
+---
+import Base from './Base.astro';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  description: string;
+  section: string;
+}
+
+const { title, description, section } = Astro.props;
+
+const allDocs = await getCollection('docs');
+const sectionDocs = allDocs
+  .filter((doc) => doc.data.section === section)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title={title} description={description}>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <div class="flex flex-col md:flex-row gap-10">
+      <!-- Sidebar -->
+      <aside class="md:w-56 shrink-0">
+        <nav class="md:sticky md:top-24">
+          <p class="text-xs font-semibold uppercase tracking-wider text-light-text-secondary dark:text-dark-text-secondary mb-3">
+            {section === 'monitor' ? 'Varax Monitor' : 'Varax Compliance'}
+          </p>
+          <ul class="space-y-1">
+            {sectionDocs.map((doc) => {
+              const isActive = Astro.url.pathname.includes(doc.id);
+              return (
+                <li>
+                  <a
+                    href={`/docs/${doc.id}`}
+                    class:list={[
+                      'block px-3 py-1.5 text-sm rounded-md transition-colors',
+                      isActive
+                        ? 'bg-accent/10 text-accent font-medium'
+                        : 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text dark:hover:text-dark-text',
+                    ]}
+                  >
+                    {doc.data.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 min-w-0">
+        <h1 class="text-3xl font-semibold text-light-text dark:text-dark-text mb-2">
+          {title}
+        </h1>
+        <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-8">
+          {description}
+        </p>
+        <div class="prose">
+          <slot />
+        </div>
+      </main>
+    </div>
+  </div>
+</Base>

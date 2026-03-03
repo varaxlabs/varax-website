@@ -1,0 +1,122 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+import TerminalDemo from '@components/TerminalDemo.astro';
+import CodeBlock from '@components/CodeBlock.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+---
+
+<Base title="Varax" description="Kubernetes tools that keep your clusters running and compliant. Open-source monitoring and compliance automation.">
+
+  <!-- Hero -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-light-text dark:text-dark-text leading-tight mb-4">
+        Kubernetes tools that keep your clusters<br class="hidden sm:block" /> running and compliant.
+      </h1>
+      <p class="text-lg text-light-text-secondary dark:text-dark-text-secondary max-w-2xl mx-auto mb-8">
+        Open-source monitoring and compliance automation for Kubernetes.
+        From CronJob observability to audit-ready SOC2 reports — all Kubernetes-native, all self-hosted.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <Button href="/monitor" size="lg">Free Varax Monitor</Button>
+        <Button href="/docs/monitor/quickstart" variant="secondary" size="lg">Get Started</Button>
+      </div>
+    </div>
+
+    <TerminalDemo />
+  </section>
+
+  <!-- Social Proof Bar -->
+  <section class="border-y border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+          CIS Benchmark
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+          NSA/CISA
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+          SOC2 Trust Services
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" /></svg>
+          Pod Security Standards
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <SectionHeading title="How It Works" subtitle="From install to compliance report in three steps." />
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">1</span>
+          <h3 class="text-lg font-semibold text-light-text dark:text-dark-text">Install</h3>
+        </div>
+        <CodeBlock title="terminal">helm install varax varaxlabs/operator</CodeBlock>
+      </div>
+
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">2</span>
+          <h3 class="text-lg font-semibold text-light-text dark:text-dark-text">Scan</h3>
+        </div>
+        <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax scan\n<span class="text-success">&#10003;</span> RBAC Configuration\n<span class="text-success">&#10003;</span> Network Policies\n<span class="text-warning">&#9888;</span> Pod Security Standards\n\nScore: <span class="text-success">87/100</span>`} />
+      </div>
+
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">3</span>
+          <h3 class="text-lg font-semibold text-light-text dark:text-dark-text">Report</h3>
+        </div>
+        <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax report --format pdf\n\n<span class="text-success">&#10003;</span> Report generated\n  varax-soc2-report.pdf (42 pages)`} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid -->
+  <section class="border-y border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <SectionHeading title="Built for Kubernetes teams" subtitle="Everything you need for Kubernetes compliance, nothing you don't." />
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { title: 'Auto-Discovery', desc: 'Scans your entire cluster automatically. No configuration files to maintain.' },
+          { title: 'SOC2 Control Mapping', desc: 'Every check maps to specific SOC2 Trust Services Criteria.' },
+          { title: 'Audit-Ready Reports', desc: 'Generate the PDF your auditor needs with one CLI command.' },
+          { title: 'Auto-Enable Audit Logging', desc: 'Programmatically enables K8s audit logging on EKS, AKS, and GKE.' },
+          { title: 'Auto-Remediation', desc: 'Opt-in fixes for failing checks with dry-run mode.' },
+          { title: 'Zero External Dependencies', desc: 'Runs entirely in your cluster. Your data never leaves.' },
+        ].map((feature) => (
+          <div class="p-6 rounded-xl border border-light-border dark:border-dark-border bg-light-bg dark:bg-dark-bg">
+            <h3 class="text-base font-semibold text-light-text dark:text-dark-text mb-2">{feature.title}</h3>
+            <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">{feature.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
+    <h2 class="text-2xl sm:text-3xl font-semibold text-light-text dark:text-dark-text mb-4">
+      Ready to see your compliance score?
+    </h2>
+    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-8 max-w-xl mx-auto">
+      Install the free tier in 60 seconds. No credit card, no sign-up, no vendor lock-in.
+    </p>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <Button href="/docs/monitor/quickstart" size="lg">Install Free — takes 60 seconds</Button>
+      <Button href="/about" variant="secondary" size="lg">Learn about us</Button>
+    </div>
+  </section>
+
+</Base>
