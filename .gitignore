@@ -22,6 +22,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# wrangler
+.wrangler/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
