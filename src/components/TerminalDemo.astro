@@ -15,10 +15,10 @@
   <div class="p-4 sm:p-6 font-mono text-sm leading-relaxed">
     <div class="terminal-line" style="--delay: 0">
       <span class="text-accent">$</span>
-      <span class="text-code-text"> helm install onax varaxlabs/onax</span>
+      <span class="text-code-text"> helm install varax varaxlabs/operator</span>
     </div>
     <div class="terminal-line text-code-text-secondary" style="--delay: 1">
-      NAME: onax
+      NAME: varax
     </div>
     <div class="terminal-line text-code-text-secondary" style="--delay: 2">
       STATUS: deployed
@@ -28,21 +28,23 @@
     </div>
     <div class="terminal-line mt-3" style="--delay: 4">
       <span class="text-accent">$</span>
-      <span class="text-code-text"> kubectl get pods -l app=onax</span>
+      <span class="text-code-text"> varax scan</span>
     </div>
-    <div class="terminal-line text-code-text-secondary" style="--delay: 5">
-      NAME &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;READY &nbsp; STATUS
+    <div class="terminal-line" style="--delay: 5">
+      <span class="text-success">&#10003;</span>
+      <span class="text-code-text"> RBAC Configuration</span>
     </div>
     <div class="terminal-line" style="--delay: 6">
-      <span class="text-code-text-secondary">onax-7f8b9c &nbsp; &nbsp;1/1 &nbsp; &nbsp;</span><span class="text-success">Running</span>
-    </div>
-    <div class="terminal-line mt-3" style="--delay: 7">
       <span class="text-success">&#10003;</span>
-      <span class="text-code-text"> Monitoring 14 CronJobs across 3 namespaces</span>
+      <span class="text-code-text"> Network Policies</span>
     </div>
-    <div class="terminal-line" style="--delay: 8">
-      <span class="text-success">&#10003;</span>
-      <span class="text-code-text"> Prometheus metrics exposed on :9090/metrics</span>
+    <div class="terminal-line" style="--delay: 7">
+      <span class="text-warning">&#9888;</span>
+      <span class="text-code-text"> Pod Security Standards</span>
+    </div>
+    <div class="terminal-line mt-3" style="--delay: 8">
+      <span class="text-code-text">Score: </span><span class="text-success">87/100</span>
+      <span class="text-code-text-secondary"> &mdash; 3 findings, 1 warning</span>
     </div>
   </div>
 </div>

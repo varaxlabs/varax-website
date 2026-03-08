@@ -6,7 +6,7 @@ import SectionHeading from '@components/SectionHeading.astro';
 import CrossPromo from '@components/CrossPromo.astro';
 ---
 
-<Base title="Onax" description="Open-source CronJob monitoring for Kubernetes. Know when jobs fail, hang, or miss their schedule — before your users do.">
+<Base title="Onax" description="Open-source CronJob monitoring for Kubernetes. Know when jobs fail, hang, or miss their schedule — without writing a single PromQL query.">
 
   <!-- Hero -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
@@ -16,11 +16,34 @@ import CrossPromo from '@components/CrossPromo.astro';
         Open-source CronJob monitoring<br class="hidden sm:block" /> for Kubernetes.
       </h1>
       <p class="text-lg text-light-text-secondary max-w-2xl mx-auto mb-8">
-        Know when jobs fail, hang, or miss their schedule — before your users do.
+        Know when jobs fail, hang, or miss their schedule — without writing a single PromQL query.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3">
-        <Button href="/docs/monitor/quickstart" size="lg">Install Now</Button>
+        <Button href="/docs/monitor/quickstart" size="lg">Get Started</Button>
         <Button href="https://github.com/varaxlabs/onax" variant="secondary" size="lg" external>View on GitHub</Button>
+      </div>
+    </div>
+
+    <!-- Terminal Demo -->
+    <div class="rounded-lg overflow-hidden border border-code-border bg-code-bg shadow-lg max-w-2xl mx-auto">
+      <div class="flex items-center gap-2 px-4 py-2.5 border-b border-code-border bg-code-titlebar">
+        <div class="flex gap-1.5">
+          <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#FEBC2E]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+        </div>
+        <span class="text-xs text-code-text-secondary font-mono ml-2">terminal</span>
+      </div>
+      <div class="p-4 sm:p-6 font-mono text-sm leading-relaxed">
+        <div><span class="text-accent">$</span><span class="text-code-text"> helm install onax varaxlabs/onax</span></div>
+        <div class="text-code-text-secondary">NAME: onax</div>
+        <div class="text-code-text-secondary">STATUS: deployed</div>
+        <div class="text-code-text-secondary">REVISION: 1</div>
+        <div class="mt-3"><span class="text-accent">$</span><span class="text-code-text"> kubectl get pods -l app=onax</span></div>
+        <div class="text-code-text-secondary">NAME &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;READY &nbsp; STATUS</div>
+        <div><span class="text-code-text-secondary">onax-7f8b9c &nbsp; &nbsp;1/1 &nbsp; &nbsp;</span><span class="text-success">Running</span></div>
+        <div class="mt-3"><span class="text-success">&#10003;</span><span class="text-code-text"> Monitoring 14 CronJobs across 3 namespaces</span></div>
+        <div><span class="text-success">&#10003;</span><span class="text-code-text"> Prometheus metrics exposed on :9090/metrics</span></div>
       </div>
     </div>
   </section>
@@ -65,7 +88,7 @@ import CrossPromo from '@components/CrossPromo.astro';
         { title: 'Smart Alert Rules', desc: 'Pre-configured Prometheus alerts for job failures, missed schedules, abnormal duration, and stuck jobs.' },
         { title: 'Prometheus Native', desc: 'Exports clean, well-labeled Prometheus metrics. Works with your existing monitoring stack. No new tools to learn.' },
         { title: 'Lightweight', desc: 'Under 50MB memory, under 0.05 CPU. Read-only cluster access. No persistent storage needed.' },
-        { title: 'Open Source', desc: 'Apache 2.0 licensed. No per-job pricing. No telemetry. No vendor lock-in.' },
+        { title: 'Open Source', desc: 'Apache 2.0 licensed. No telemetry. No vendor lock-in. Free forever.' },
       ].map((feature) => (
         <div class="p-6 rounded-xl border border-light-border bg-light-surface">
           <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>

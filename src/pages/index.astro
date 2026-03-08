@@ -18,8 +18,8 @@ import SectionHeading from '@components/SectionHeading.astro';
         Auto-discovers misconfigurations. Maps to SOC2 controls. Generates the PDF your auditor wants. And your data never leaves your cluster.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3">
-        <Button href="/docs/compliance/quickstart" size="lg">Explore Compliance</Button>
-        <Button href="/onax" variant="secondary" size="lg">Onax Monitor</Button>
+        <Button href="/docs/compliance/quickstart" size="lg">Install Varax</Button>
+        <Button href="/onax" variant="secondary" size="lg">Try Onax &rarr;</Button>
       </div>
     </div>
 
@@ -113,7 +113,7 @@ import SectionHeading from '@components/SectionHeading.astro';
           { title: 'Audit-Ready Reports', desc: 'Generate the PDF your auditor needs with one CLI command.' },
           { title: 'Auto-Enable Audit Logging', desc: 'Programmatically enables K8s audit logging on EKS, AKS, and GKE.' },
           { title: 'Auto-Remediation', desc: 'Opt-in fixes for failing checks with dry-run mode.' },
-          { title: 'Zero External Dependencies', desc: 'Runs entirely in your cluster. Your data never leaves.' },
+          { title: 'CIS Benchmark Checks', desc: 'Validates against CIS Kubernetes Benchmarks with HIPAA and PCI-DSS on the roadmap.' },
         ].map((feature) => (
           <div class="p-6 rounded-xl border border-light-border bg-light-bg">
             <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>
@@ -130,10 +130,10 @@ import SectionHeading from '@components/SectionHeading.astro';
       Ready to see your compliance score?
     </h2>
     <p class="text-base text-light-text-secondary mb-8 max-w-xl mx-auto">
-      Install the free tier in 60 seconds. No credit card, no sign-up, no vendor lock-in.
+      Install in 60 seconds. No credit card, no sign-up, no vendor lock-in.
     </p>
     <div class="flex flex-wrap items-center justify-center gap-3">
-      <Button href="/docs/compliance/quickstart" size="lg">Install Free — takes 60 seconds</Button>
+      <Button href="/docs/compliance/quickstart" size="lg">Install Varax — takes 60 seconds</Button>
       <Button href="/sample-report" variant="secondary" size="lg">View Sample Report</Button>
     </div>
   </section>
