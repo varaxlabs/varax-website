@@ -4,7 +4,7 @@ import Button from '@components/Button.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 
 const checkIcon = `<svg class="w-4 h-4 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>`;
-const xIcon = `<svg class="w-4 h-4 text-light-text-secondary dark:text-dark-text-secondary shrink-0 mt-0.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12" /></svg>`;
+const xIcon = `<svg class="w-4 h-4 text-light-text-secondary shrink-0 mt-0.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12" /></svg>`;
 
 const freeTier = {
   name: 'Free',
@@ -75,25 +75,25 @@ const faqs = [
 
   <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-8">
     <div class="text-center mb-12">
-      <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-4">
+      <h1 class="text-3xl sm:text-4xl font-semibold text-light-text mb-4">
         Simple pricing. No per-node fees.
       </h1>
-      <p class="text-base text-light-text-secondary dark:text-dark-text-secondary max-w-xl mx-auto mb-8">
+      <p class="text-base text-light-text-secondary max-w-xl mx-auto mb-8">
         One flat rate per cluster. The free tier is free forever.
       </p>
 
       <!-- Billing Toggle -->
       <div class="flex items-center justify-center gap-3 text-sm">
-        <span id="label-monthly" class="font-semibold text-light-text dark:text-dark-text">Monthly</span>
+        <span id="label-monthly" class="font-semibold text-light-text">Monthly</span>
         <button
           id="billing-toggle"
           type="button"
-          class="relative w-12 h-6 rounded-full bg-light-border dark:bg-dark-border transition-colors"
+          class="relative w-12 h-6 rounded-full bg-light-border transition-colors"
           aria-label="Toggle annual billing"
         >
           <span id="toggle-knob" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-accent transition-transform"></span>
         </button>
-        <span id="label-annual" class="text-light-text-secondary dark:text-dark-text-secondary">
+        <span id="label-annual" class="text-light-text-secondary">
           Annual <span class="text-accent text-xs font-semibold ml-1">Save $298</span>
         </span>
       </div>
@@ -102,17 +102,17 @@ const faqs = [
     <!-- Pricing Cards -->
     <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
       <!-- Free -->
-      <div class="p-8 rounded-xl border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
-        <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-1">{freeTier.name}</h2>
+      <div class="p-8 rounded-xl border border-light-border bg-light-surface">
+        <h2 class="text-xl font-semibold text-light-text mb-1">{freeTier.name}</h2>
         <div class="mb-4">
-          <span class="text-3xl font-semibold text-light-text dark:text-dark-text">$0</span>
-          <span class="text-light-text-secondary dark:text-dark-text-secondary text-sm"> forever</span>
+          <span class="text-3xl font-semibold text-light-text">$0</span>
+          <span class="text-light-text-secondary text-sm"> forever</span>
         </div>
-        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-6">{freeTier.description}</p>
+        <p class="text-sm text-light-text-secondary mb-6">{freeTier.description}</p>
         <Button href={freeTier.cta.href} variant="secondary" class="w-full mb-8">{freeTier.cta.label}</Button>
         <ul class="space-y-3">
           {freeTier.features.map((f) => (
-            <li class="flex items-start gap-2.5 text-sm text-light-text dark:text-dark-text">
+            <li class="flex items-start gap-2.5 text-sm text-light-text">
               <Fragment set:html={f.included ? checkIcon : xIcon} />
               <span class:list={[!f.included && 'opacity-40']}>{f.text}</span>
             </li>
@@ -121,19 +121,19 @@ const faqs = [
       </div>
 
       <!-- Pro -->
-      <div class="relative p-8 rounded-xl border-2 border-accent bg-light-surface dark:bg-dark-surface">
+      <div class="relative p-8 rounded-xl border-2 border-accent bg-light-surface">
         <span class="absolute -top-3 left-6 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-accent text-white">Popular</span>
-        <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-1">{proTier.name}</h2>
+        <h2 class="text-xl font-semibold text-light-text mb-1">{proTier.name}</h2>
         <div class="mb-4">
-          <span id="pro-price" class="text-3xl font-semibold text-light-text dark:text-dark-text">$149</span>
-          <span id="pro-period" class="text-light-text-secondary dark:text-dark-text-secondary text-sm">/month</span>
+          <span id="pro-price" class="text-3xl font-semibold text-light-text">$149</span>
+          <span id="pro-period" class="text-light-text-secondary text-sm">/month</span>
         </div>
-        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-6">{proTier.description}</p>
+        <p class="text-sm text-light-text-secondary mb-6">{proTier.description}</p>
         <!-- Stripe Checkout button — href will be replaced with Stripe Checkout URL -->
         <Button href={proTier.cta.href} class="w-full mb-8">{proTier.cta.label}</Button>
         <ul class="space-y-3">
           {proTier.features.map((f) => (
-            <li class="flex items-start gap-2.5 text-sm text-light-text dark:text-dark-text">
+            <li class="flex items-start gap-2.5 text-sm text-light-text">
               <Fragment set:html={checkIcon} />
               {f.text}
             </li>
@@ -142,7 +142,7 @@ const faqs = [
       </div>
     </div>
 
-    <p class="text-center text-sm text-light-text-secondary dark:text-dark-text-secondary mt-8">
+    <p class="text-center text-sm text-light-text-secondary mt-8">
       All plans include 109 security checks across CIS, NSA/CISA, SOC2, and PSS benchmarks.
       <br />30-day money-back guarantee on Pro.
     </p>
@@ -153,12 +153,12 @@ const faqs = [
     <SectionHeading title="Frequently Asked Questions" />
     <div class="space-y-4">
       {faqs.map((faq) => (
-        <details class="group border border-light-border dark:border-dark-border rounded-lg">
-          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 text-sm font-semibold text-light-text dark:text-dark-text">
+        <details class="group border border-light-border rounded-lg">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 text-sm font-semibold text-light-text">
             {faq.q}
-            <svg class="w-4 h-4 shrink-0 ml-4 transition-transform group-open:rotate-180 text-light-text-secondary dark:text-dark-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7" /></svg>
+            <svg class="w-4 h-4 shrink-0 ml-4 transition-transform group-open:rotate-180 text-light-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7" /></svg>
           </summary>
-          <div class="px-6 pb-4 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+          <div class="px-6 pb-4 text-sm text-light-text-secondary">
             {faq.a}
           </div>
         </details>
@@ -186,10 +186,8 @@ const faqs = [
       proPrice.textContent = isAnnual ? '$1,490' : '$149';
       proPeriod.textContent = isAnnual ? '/year' : '/month';
       labelMonthly.classList.toggle('text-light-text-secondary', isAnnual);
-      labelMonthly.classList.toggle('dark:text-dark-text-secondary', isAnnual);
       labelMonthly.classList.toggle('font-semibold', !isAnnual);
       labelAnnual.classList.toggle('text-light-text', isAnnual);
-      labelAnnual.classList.toggle('dark:text-dark-text', isAnnual);
       labelAnnual.classList.toggle('font-semibold', isAnnual);
     });
   }

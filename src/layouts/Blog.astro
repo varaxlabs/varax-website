@@ -25,23 +25,23 @@ const readingTime = '5 min read';
   <article class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
     <!-- Article Header -->
     <header class="mb-10">
-      <div class="flex flex-wrap items-center gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary mb-4">
+      <div class="flex flex-wrap items-center gap-2 text-sm text-light-text-secondary mb-4">
         <time datetime={date.toISOString()}>{formattedDate}</time>
         <span>&middot;</span>
         <span>{readingTime}</span>
         <span>&middot;</span>
         <span>{author}</span>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text leading-tight mb-4">
+      <h1 class="text-3xl sm:text-4xl font-semibold text-light-text leading-tight mb-4">
         {title}
       </h1>
-      <p class="text-lg text-light-text-secondary dark:text-dark-text-secondary">
+      <p class="text-lg text-light-text-secondary">
         {description}
       </p>
       {tags.length > 0 && (
         <div class="flex flex-wrap gap-2 mt-4">
           {tags.map((tag) => (
-            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-light-border dark:bg-dark-border text-light-text-secondary dark:text-dark-text-secondary">
+            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-light-border text-light-text-secondary">
               {tag}
             </span>
           ))}

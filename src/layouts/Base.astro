@@ -20,12 +20,11 @@ const fullTitle = title === 'Varax' ? title : `${title} | Varax`;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/logos/varax-favicon-dark-32.svg" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/svg+xml" href="/logos/varax-favicon-light-32.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/logos/varax-favicon-light-32.svg" />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -50,19 +49,6 @@ const fullTitle = title === 'Varax' ? title : `${title} | Varax`;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-    <!-- Dark mode init (prevents flash) -->
-    <script is:inline>
-      (function() {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'light') {
-          document.documentElement.classList.remove('dark');
-        } else if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-        }
-        // Default is dark (already set on html element)
-      })();
-    </script>
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />
@@ -70,5 +56,32 @@ const fullTitle = title === 'Varax' ? title : `${title} | Varax`;
       <slot />
     </main>
     <Footer />
+
+    <script>
+      function initCopyButtons() {
+        document.querySelectorAll('pre').forEach((pre) => {
+          if (pre.querySelector('.copy-btn')) return;
+          const btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.setAttribute('aria-label', 'Copy code');
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+          btn.addEventListener('click', async () => {
+            const code = pre.querySelector('code')?.textContent || pre.textContent || '';
+            await navigator.clipboard.writeText(code);
+            btn.classList.add('copied');
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+            setTimeout(() => {
+              btn.classList.remove('copied');
+              btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+            }, 2000);
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      initCopyButtons();
+      document.addEventListener('astro:after-swap', initCopyButtons);
+    </script>
   </body>
 </html>

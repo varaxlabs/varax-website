@@ -12,11 +12,11 @@ import CrossPromo from '@components/CrossPromo.astro';
   <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
     <div class="text-center">
       <p class="text-sm font-semibold uppercase tracking-wider text-accent mb-3">Open Source</p>
-      <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-light-text dark:text-dark-text leading-tight mb-4">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-light-text leading-tight mb-4">
         Free Kubernetes CronJob monitoring.<br class="hidden sm:block" />
         Zero config. Zero cost.
       </h1>
-      <p class="text-lg text-light-text-secondary dark:text-dark-text-secondary max-w-2xl mx-auto mb-8">
+      <p class="text-lg text-light-text-secondary max-w-2xl mx-auto mb-8">
         Auto-discover every CronJob in your cluster. Track execution, detect failures,
         alert on missed schedules — all through Prometheus and Grafana. Installs in 60 seconds.
       </p>
@@ -28,25 +28,25 @@ import CrossPromo from '@components/CrossPromo.astro';
   </section>
 
   <!-- Problem / Solution -->
-  <section class="border-y border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+  <section class="border-y border-light-border bg-light-surface">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
       <div class="grid md:grid-cols-2 gap-12">
         <div>
           <h2 class="text-sm font-semibold uppercase tracking-wider text-error mb-3">The Problem</h2>
-          <h3 class="text-xl font-semibold text-light-text dark:text-dark-text mb-4">
+          <h3 class="text-xl font-semibold text-light-text mb-4">
             Kubernetes CronJobs fail silently.
           </h3>
-          <p class="text-base text-light-text-secondary dark:text-dark-text-secondary">
+          <p class="text-base text-light-text-secondary">
             Your nightly backup didn't run? Your report generator has been broken for a week? You won't know until someone complains.
             Existing solutions are either expensive SaaS tools that require per-job configuration, or hours of DIY Prometheus PromQL wrangling.
           </p>
         </div>
         <div>
           <h2 class="text-sm font-semibold uppercase tracking-wider text-success mb-3">The Solution</h2>
-          <h3 class="text-xl font-semibold text-light-text dark:text-dark-text mb-4">
+          <h3 class="text-xl font-semibold text-light-text mb-4">
             One Helm command. Zero configuration.
           </h3>
-          <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-4">
+          <p class="text-base text-light-text-secondary mb-4">
             Every CronJob monitored automatically. Varax Monitor uses Kubernetes Informers to detect every CronJob in your cluster
             and exports clean Prometheus metrics. No per-job setup. No annotations. It just works.
           </p>
@@ -69,29 +69,29 @@ import CrossPromo from '@components/CrossPromo.astro';
         { title: 'Lightweight', desc: 'Under 50MB memory, under 0.05 CPU. Read-only cluster access. No persistent storage needed.' },
         { title: '100% Free', desc: 'Apache 2.0 licensed. No per-job pricing. No telemetry. No vendor lock-in.' },
       ].map((feature) => (
-        <div class="p-6 rounded-xl border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
-          <h3 class="text-base font-semibold text-light-text dark:text-dark-text mb-2">{feature.title}</h3>
-          <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">{feature.desc}</p>
+        <div class="p-6 rounded-xl border border-light-border bg-light-surface">
+          <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>
+          <p class="text-sm text-light-text-secondary">{feature.desc}</p>
         </div>
       ))}
     </div>
   </section>
 
   <!-- Metrics Reference -->
-  <section class="border-y border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+  <section class="border-y border-light-border bg-light-surface">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
       <SectionHeading title="Metrics at a glance" subtitle="Clean, well-labeled Prometheus metrics for every CronJob in your cluster." />
 
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="border-b border-light-border dark:border-dark-border">
-              <th class="text-left py-3 px-4 font-semibold text-light-text dark:text-dark-text">Metric</th>
-              <th class="text-left py-3 px-4 font-semibold text-light-text dark:text-dark-text">Type</th>
-              <th class="text-left py-3 px-4 font-semibold text-light-text dark:text-dark-text">Description</th>
+            <tr class="border-b border-light-border">
+              <th class="text-left py-3 px-4 font-semibold text-light-text">Metric</th>
+              <th class="text-left py-3 px-4 font-semibold text-light-text">Type</th>
+              <th class="text-left py-3 px-4 font-semibold text-light-text">Description</th>
             </tr>
           </thead>
-          <tbody class="text-light-text-secondary dark:text-dark-text-secondary">
+          <tbody class="text-light-text-secondary">
             {[
               { metric: 'cronjob_last_execution_status', type: 'Gauge', desc: 'Last execution result (1=success, 0=failure)' },
               { metric: 'cronjob_last_execution_duration_seconds', type: 'Gauge', desc: 'Duration of last execution' },
@@ -100,7 +100,7 @@ import CrossPromo from '@components/CrossPromo.astro';
               { metric: 'cronjob_next_schedule_time', type: 'Gauge', desc: 'Unix timestamp of next expected run' },
               { metric: 'cronjob_is_suspended', type: 'Gauge', desc: 'Whether the CronJob is suspended' },
             ].map((row) => (
-              <tr class="border-b border-light-border dark:border-dark-border">
+              <tr class="border-b border-light-border">
                 <td class="py-3 px-4 font-mono text-xs text-accent">{row.metric}</td>
                 <td class="py-3 px-4">{row.type}</td>
                 <td class="py-3 px-4">{row.desc}</td>
@@ -118,9 +118,9 @@ import CrossPromo from '@components/CrossPromo.astro';
   </section>
 
   <!-- Final CTA -->
-  <section class="border-t border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+  <section class="border-t border-light-border bg-light-surface">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-      <h2 class="text-2xl sm:text-3xl font-semibold text-light-text dark:text-dark-text mb-4">
+      <h2 class="text-2xl sm:text-3xl font-semibold text-light-text mb-4">
         Monitor every CronJob in your cluster. Free forever.
       </h2>
       <div class="max-w-xl mx-auto mb-8">

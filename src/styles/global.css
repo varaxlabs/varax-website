@@ -1,20 +1,11 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   /* Brand Accent */
   --color-accent: #E85D3A;
   --color-accent-light: #FF7A55;
   --color-accent-dark: #C4432A;
   --color-accent-red: #D94E2B;
-
-  /* Dark Theme Neutrals */
-  --color-dark-bg: #0A0E13;
-  --color-dark-surface: #0F1419;
-  --color-dark-border: #1E2832;
-  --color-dark-text-secondary: #5A6A7A;
-  --color-dark-text: #E8E1D9;
 
   /* Light Theme Neutrals */
   --color-light-bg: #F4F1EC;
@@ -23,11 +14,18 @@
   --color-light-text-secondary: #8A8078;
   --color-light-text: #1A1F28;
 
+  /* Code block colors (warm light) */
+  --color-code-bg: #F0EDE7;
+  --color-code-border: #DDD8CF;
+  --color-code-text: #3A3630;
+  --color-code-text-secondary: #8A8078;
+  --color-code-titlebar: #E8E4DC;
+
   /* Semantic */
-  --color-success: #4ADE80;
-  --color-warning: #FACC15;
-  --color-error: #F87171;
-  --color-info: #60A5FA;
+  --color-success: #2D8A4E;
+  --color-warning: #B8860B;
+  --color-error: #CC3333;
+  --color-info: #2563EB;
 
   /* Fonts */
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -42,10 +40,6 @@ html {
 
 body {
   @apply bg-light-bg text-light-text;
-}
-
-.dark body {
-  @apply bg-dark-bg text-dark-text;
 }
 
 /* Prose styles for MDX content */
@@ -91,15 +85,15 @@ body {
 }
 
 .prose code {
-  @apply font-mono text-sm bg-dark-surface text-dark-text px-1.5 py-0.5 rounded;
+  @apply font-mono text-sm bg-code-bg text-code-text px-1.5 py-0.5 rounded border border-code-border;
 }
 
 .prose pre {
-  @apply font-mono text-sm bg-dark-surface text-dark-text p-4 rounded-lg overflow-x-auto mb-4;
+  @apply font-mono text-sm bg-code-bg text-code-text p-4 rounded-lg overflow-x-auto mb-4 border border-code-border relative;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0;
+  @apply bg-transparent p-0 border-none;
 }
 
 .prose blockquote {
@@ -114,20 +108,12 @@ body {
   @apply border-b border-light-border;
 }
 
-.dark .prose thead {
-  @apply border-dark-border;
-}
-
 .prose th {
   @apply text-left py-2 px-3 font-semibold;
 }
 
 .prose td {
   @apply py-2 px-3 border-b border-light-border;
-}
-
-.dark .prose td {
-  @apply border-dark-border;
 }
 
 .prose img {
@@ -138,6 +124,11 @@ body {
   @apply border-light-border my-8;
 }
 
-.dark .prose hr {
-  @apply border-dark-border;
+/* Copy button for code blocks */
+.copy-btn {
+  @apply absolute top-2.5 right-2.5 p-1.5 rounded-md text-code-text-secondary hover:text-code-text hover:bg-code-border transition-colors;
+}
+
+.copy-btn.copied {
+  @apply text-success;
 }

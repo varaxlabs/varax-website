@@ -38,10 +38,10 @@ const releases = [
 <Base title="Changelog" description="Release notes and updates for Varax products.">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
 
-    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-3">
+    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text mb-3">
       Changelog
     </h1>
-    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-12">
+    <p class="text-base text-light-text-secondary mb-12">
       Release notes and updates for Varax products.
     </p>
 
@@ -50,10 +50,10 @@ const releases = [
         <div class="relative pl-8 border-l-2 border-accent/30">
           <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-accent"></div>
           <div class="flex flex-wrap items-center gap-3 mb-3">
-            <span class="text-sm font-mono font-semibold text-light-text dark:text-dark-text px-2 py-0.5 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+            <span class="text-sm font-mono font-semibold text-light-text px-2 py-0.5 rounded bg-light-surface border border-light-border">
               {release.version}
             </span>
-            <span class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            <span class="text-sm text-light-text-secondary">
               {release.date}
             </span>
             <span class="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-accent/10 text-accent">
@@ -62,7 +62,7 @@ const releases = [
           </div>
           <ul class="space-y-1.5">
             {release.changes.map((change) => (
-              <li class="flex items-start gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              <li class="flex items-start gap-2 text-sm text-light-text-secondary">
                 <span class="text-accent mt-1.5 shrink-0">&#8226;</span>
                 {change}
               </li>
