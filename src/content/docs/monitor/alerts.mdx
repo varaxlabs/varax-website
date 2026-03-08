@@ -1,0 +1,169 @@
+---
+title: Alert Rules
+description: Pre-built Prometheus alert rules for Kubernetes CronJob monitoring.
+section: monitor
+order: 4
+---
+
+## Overview
+
+Varax Monitor includes pre-built alert rules for Prometheus AlertManager. Copy these into your AlertManager configuration to get notified about CronJob failures, missed schedules, and performance issues.
+
+## Alert Rules
+
+### CronJob Failed
+
+Fires immediately when a CronJob's last execution failed.
+
+```yaml
+- alert: CronJobFailed
+  expr: cronjob_last_execution_status == 0
+  for: 0m
+  labels:
+    severity: warning
+  annotations:
+    summary: "CronJob {{ $labels.cronjob }} failed"
+    description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} has failed its last execution."
+```
+
+### CronJob Missed Schedule
+
+Fires when a CronJob misses one or more scheduled executions in the past hour.
+
+```yaml
+- alert: CronJobMissedSchedule
+  expr: increase(cronjob_missed_schedules_total[1h]) > 0
+  for: 0m
+  labels:
+    severity: warning
+  annotations:
+    summary: "CronJob {{ $labels.cronjob }} missed schedule"
+    description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} has missed one or more scheduled executions in the past hour."
+```
+
+### CronJob Slow Execution
+
+Fires when a CronJob takes longer than 5 minutes to complete.
+
+```yaml
+- alert: CronJobSlowExecution
+  expr: cronjob_last_execution_duration_seconds > 300
+  for: 0m
+  labels:
+    severity: info
+  annotations:
+    summary: "CronJob {{ $labels.cronjob }} running slowly"
+    description: "CronJob {{ $labels.cronjob }} took {{ $value | humanizeDuration }} to execute (threshold: 5m)."
+```
+
+### CronJob Stuck
+
+Fires when a CronJob appears to be running for more than 1 hour.
+
+```yaml
+- alert: CronJobStuck
+  expr: time() - cronjob_last_execution_duration_seconds > 3600
+  for: 5m
+  labels:
+    severity: critical
+  annotations:
+    summary: "CronJob {{ $labels.cronjob }} may be stuck"
+    description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} has been running for over 1 hour."
+```
+
+### CronJob Suspended
+
+Informational alert when a CronJob is suspended.
+
+```yaml
+- alert: CronJobSuspended
+  expr: cronjob_is_suspended == 1
+  for: 0m
+  labels:
+    severity: info
+  annotations:
+    summary: "CronJob {{ $labels.cronjob }} is suspended"
+    description: "CronJob {{ $labels.cronjob }} in namespace {{ $labels.namespace }} is currently suspended and will not run on schedule."
+```
+
+## Full AlertManager Group
+
+Combine all rules into a single group:
+
+```yaml
+groups:
+  - name: varax-monitor
+    rules:
+      - alert: CronJobFailed
+        expr: cronjob_last_execution_status == 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} failed"
+          description: "CronJob {{ $labels.cronjob }} in {{ $labels.namespace }} failed."
+
+      - alert: CronJobMissedSchedule
+        expr: increase(cronjob_missed_schedules_total[1h]) > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} missed schedule"
+
+      - alert: CronJobSlowExecution
+        expr: cronjob_last_execution_duration_seconds > 300
+        for: 0m
+        labels:
+          severity: info
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} running slowly ({{ $value | humanizeDuration }})"
+
+      - alert: CronJobStuck
+        expr: time() - cronjob_last_execution_duration_seconds > 3600
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} may be stuck"
+
+      - alert: CronJobSuspended
+        expr: cronjob_is_suspended == 1
+        for: 0m
+        labels:
+          severity: info
+        annotations:
+          summary: "CronJob {{ $labels.cronjob }} is suspended"
+```
+
+## Tuning Thresholds
+
+Adjust thresholds for your environment:
+
+- **Slow execution**: Change `300` (5 minutes) to match your longest expected job duration
+- **Stuck detection**: Change `3600` (1 hour) based on your job runtime expectations
+- **Severity levels**: Adjust `severity` labels to match your AlertManager routing rules
+
+## Integration Examples
+
+### Slack
+
+```yaml
+receivers:
+  - name: slack
+    slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+        channel: '#alerts'
+        title: '{{ .GroupLabels.alertname }}'
+        text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+```
+
+### PagerDuty
+
+```yaml
+receivers:
+  - name: pagerduty
+    pagerduty_configs:
+      - service_key: 'YOUR_SERVICE_KEY'
+        severity: '{{ .GroupLabels.severity }}'
+```

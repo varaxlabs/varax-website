@@ -1,0 +1,67 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+
+const deliverables = [
+  'Varax installation and configuration on your cluster',
+  'Full compliance scan with expert analysis of results',
+  'Written recommendations for every failing control',
+  'Evidence collection and organization for your auditor',
+  '60-minute walkthrough call reviewing findings',
+  '30-day follow-up scan to verify remediation progress',
+];
+---
+
+<Base title="Consulting" description="SOC2 Readiness Assessment for Kubernetes. Hands-on help getting your cluster compliant.">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
+    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-4">
+      SOC2 Readiness Assessment
+    </h1>
+    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-12 max-w-2xl">
+      Hands-on help getting your Kubernetes infrastructure SOC2-ready.
+      From initial scan to auditor-ready evidence — we do the heavy lifting.
+    </p>
+
+    <!-- What's Included -->
+    <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-6">What's Included</h2>
+    <div class="space-y-3 mb-12">
+      {deliverables.map((item) => (
+        <div class="flex items-start gap-3 p-4 rounded-lg border border-light-border dark:border-dark-border">
+          <svg class="w-5 h-5 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
+          <span class="text-sm text-light-text dark:text-dark-text">{item}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Who It's For -->
+    <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-4">Who It's For</h2>
+    <div class="space-y-4 text-base text-light-text-secondary dark:text-dark-text-secondary mb-12 leading-relaxed">
+      <ul class="list-disc pl-5 space-y-2 text-sm">
+        <li>Teams preparing for their first SOC2 audit</li>
+        <li>Companies that need compliance fast but don't have in-house expertise</li>
+        <li>Platform teams who want a second pair of eyes on their Kubernetes security posture</li>
+      </ul>
+    </div>
+
+    <!-- Pricing -->
+    <div class="p-6 rounded-xl border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface mb-12">
+      <div class="flex items-baseline gap-2 mb-2">
+        <span class="text-2xl font-semibold text-light-text dark:text-dark-text">Starting at $2,000</span>
+      </div>
+      <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-3">
+        Pricing depends on cluster complexity and number of environments.
+      </p>
+      <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+        Every engagement includes a Varax Pro license for the duration of the assessment.
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div class="flex flex-wrap gap-3">
+      <!-- Calendly link TBD — replace href when available -->
+      <Button href="#calendly" size="lg">Schedule a Call</Button>
+      <Button href="/" variant="secondary" size="lg">Learn about Varax</Button>
+    </div>
+  </div>
+</Base>

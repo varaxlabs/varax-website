@@ -1,0 +1,199 @@
+---
+import Base from '@layouts/Base.astro';
+import Button from '@components/Button.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+
+const checkIcon = `<svg class="w-4 h-4 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>`;
+const xIcon = `<svg class="w-4 h-4 text-light-text-secondary dark:text-dark-text-secondary shrink-0 mt-0.5 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12" /></svg>`;
+
+const freeTier = {
+  name: 'Free',
+  price: { monthly: '$0', annual: '$0' },
+  description: 'Core compliance scanning for every Kubernetes team.',
+  cta: { label: 'Install Free', href: '/docs/compliance/quickstart' },
+  features: [
+    { text: '109 security checks (CIS, NSA/CISA, SOC2, PSS)', included: true },
+    { text: 'Terminal compliance summary', included: true },
+    { text: 'JSON output for CI/CD', included: true },
+    { text: 'Dry-run remediation preview', included: true },
+    { text: 'BoltDB scan history', included: true },
+    { text: 'Audit-ready PDF/HTML reports', included: false },
+    { text: 'Full evidence packages', included: false },
+    { text: 'Auto-remediation', included: false },
+    { text: 'Priority email support', included: false },
+  ],
+};
+
+const proTier = {
+  name: 'Pro',
+  price: { monthly: '$149', annual: '$1,490' },
+  period: { monthly: '/month', annual: '/year' },
+  description: 'Audit-ready reports and auto-remediation for teams that need SOC2.',
+  cta: { label: 'Buy Pro', href: '#' }, // Stripe integration TBD
+  features: [
+    { text: '109 security checks (CIS, NSA/CISA, SOC2, PSS)', included: true },
+    { text: 'Terminal compliance summary', included: true },
+    { text: 'JSON output for CI/CD', included: true },
+    { text: 'Dry-run remediation preview', included: true },
+    { text: 'BoltDB scan history', included: true },
+    { text: 'Audit-ready PDF/HTML reports', included: true },
+    { text: 'Full evidence packages', included: true },
+    { text: 'Auto-remediation', included: true },
+    { text: 'Priority email support', included: true },
+  ],
+};
+
+const faqs = [
+  {
+    q: 'What happens when my license expires?',
+    a: 'Varax continues scanning and producing terminal output — you never lose visibility. Pro features (HTML reports, auto-remediation, evidence packages) are disabled until you renew. There\'s a 5-day grace period after expiration.',
+  },
+  {
+    q: 'Can I try Pro before buying?',
+    a: 'The free tier runs the same 109 checks as Pro. The difference is output format and automation. View our sample report to see exactly what Pro generates.',
+  },
+  {
+    q: 'Is there a per-node or per-cluster fee?',
+    a: 'No. Flat rate. One license covers one cluster regardless of size. Need multiple clusters? Contact us for volume pricing.',
+  },
+  {
+    q: 'Do I need to send data to your servers?',
+    a: 'No. Varax runs entirely in your cluster. No data ever leaves your infrastructure. License validation uses an offline Ed25519 signature — no phone-home required.',
+  },
+  {
+    q: 'What\'s your refund policy?',
+    a: '30-day money-back guarantee, no questions asked. If Varax doesn\'t save you time on your next audit, we\'ll refund your purchase.',
+  },
+  {
+    q: 'Do you offer annual billing?',
+    a: 'Yes — annual billing saves you two months ($298/year). Toggle the pricing above to see annual rates.',
+  },
+];
+---
+
+<Base title="Pricing" description="Simple, flat-rate pricing for Kubernetes compliance automation. Free tier included.">
+
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-8">
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-4">
+        Simple pricing. No per-node fees.
+      </h1>
+      <p class="text-base text-light-text-secondary dark:text-dark-text-secondary max-w-xl mx-auto mb-8">
+        One flat rate per cluster. The free tier is free forever.
+      </p>
+
+      <!-- Billing Toggle -->
+      <div class="flex items-center justify-center gap-3 text-sm">
+        <span id="label-monthly" class="font-semibold text-light-text dark:text-dark-text">Monthly</span>
+        <button
+          id="billing-toggle"
+          type="button"
+          class="relative w-12 h-6 rounded-full bg-light-border dark:bg-dark-border transition-colors"
+          aria-label="Toggle annual billing"
+        >
+          <span id="toggle-knob" class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-accent transition-transform"></span>
+        </button>
+        <span id="label-annual" class="text-light-text-secondary dark:text-dark-text-secondary">
+          Annual <span class="text-accent text-xs font-semibold ml-1">Save $298</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <!-- Free -->
+      <div class="p-8 rounded-xl border border-light-border dark:border-dark-border bg-light-surface dark:bg-dark-surface">
+        <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-1">{freeTier.name}</h2>
+        <div class="mb-4">
+          <span class="text-3xl font-semibold text-light-text dark:text-dark-text">$0</span>
+          <span class="text-light-text-secondary dark:text-dark-text-secondary text-sm"> forever</span>
+        </div>
+        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-6">{freeTier.description}</p>
+        <Button href={freeTier.cta.href} variant="secondary" class="w-full mb-8">{freeTier.cta.label}</Button>
+        <ul class="space-y-3">
+          {freeTier.features.map((f) => (
+            <li class="flex items-start gap-2.5 text-sm text-light-text dark:text-dark-text">
+              <Fragment set:html={f.included ? checkIcon : xIcon} />
+              <span class:list={[!f.included && 'opacity-40']}>{f.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="relative p-8 rounded-xl border-2 border-accent bg-light-surface dark:bg-dark-surface">
+        <span class="absolute -top-3 left-6 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-accent text-white">Popular</span>
+        <h2 class="text-xl font-semibold text-light-text dark:text-dark-text mb-1">{proTier.name}</h2>
+        <div class="mb-4">
+          <span id="pro-price" class="text-3xl font-semibold text-light-text dark:text-dark-text">$149</span>
+          <span id="pro-period" class="text-light-text-secondary dark:text-dark-text-secondary text-sm">/month</span>
+        </div>
+        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-6">{proTier.description}</p>
+        <!-- Stripe Checkout button — href will be replaced with Stripe Checkout URL -->
+        <Button href={proTier.cta.href} class="w-full mb-8">{proTier.cta.label}</Button>
+        <ul class="space-y-3">
+          {proTier.features.map((f) => (
+            <li class="flex items-start gap-2.5 text-sm text-light-text dark:text-dark-text">
+              <Fragment set:html={checkIcon} />
+              {f.text}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <p class="text-center text-sm text-light-text-secondary dark:text-dark-text-secondary mt-8">
+      All plans include 109 security checks across CIS, NSA/CISA, SOC2, and PSS benchmarks.
+      <br />30-day money-back guarantee on Pro.
+    </p>
+  </section>
+
+  <!-- FAQ -->
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <SectionHeading title="Frequently Asked Questions" />
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group border border-light-border dark:border-dark-border rounded-lg">
+          <summary class="flex items-center justify-between cursor-pointer px-6 py-4 text-sm font-semibold text-light-text dark:text-dark-text">
+            {faq.q}
+            <svg class="w-4 h-4 shrink-0 ml-4 transition-transform group-open:rotate-180 text-light-text-secondary dark:text-dark-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7" /></svg>
+          </summary>
+          <div class="px-6 pb-4 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            {faq.a}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+</Base>
+
+<script>
+  function initBillingToggle() {
+    const toggle = document.getElementById('billing-toggle');
+    const knob = document.getElementById('toggle-knob');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelAnnual = document.getElementById('label-annual');
+    const proPrice = document.getElementById('pro-price');
+    const proPeriod = document.getElementById('pro-period');
+    if (!toggle || !knob || !labelMonthly || !labelAnnual || !proPrice || !proPeriod) return;
+
+    let isAnnual = false;
+
+    toggle.addEventListener('click', () => {
+      isAnnual = !isAnnual;
+      knob.style.transform = isAnnual ? 'translateX(1.5rem)' : 'translateX(0)';
+      proPrice.textContent = isAnnual ? '$1,490' : '$149';
+      proPeriod.textContent = isAnnual ? '/year' : '/month';
+      labelMonthly.classList.toggle('text-light-text-secondary', isAnnual);
+      labelMonthly.classList.toggle('dark:text-dark-text-secondary', isAnnual);
+      labelMonthly.classList.toggle('font-semibold', !isAnnual);
+      labelAnnual.classList.toggle('text-light-text', isAnnual);
+      labelAnnual.classList.toggle('dark:text-dark-text', isAnnual);
+      labelAnnual.classList.toggle('font-semibold', isAnnual);
+    });
+  }
+
+  initBillingToggle();
+  document.addEventListener('astro:after-swap', initBillingToggle);
+</script>

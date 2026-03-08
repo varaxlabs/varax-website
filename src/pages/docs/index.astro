@@ -25,18 +25,19 @@ import Button from '@components/Button.astro';
         <span class="text-sm text-accent font-medium">Get started &rarr;</span>
       </a>
 
-      <!-- Compliance Docs (coming soon) -->
-      <div class="p-6 rounded-xl border border-light-border dark:border-dark-border opacity-60">
+      <!-- Compliance Docs -->
+      <a href="/docs/compliance/quickstart" class="group block p-6 rounded-xl border border-light-border dark:border-dark-border hover:border-accent/50 transition-colors">
         <div class="flex items-center gap-2 mb-3">
-          <span class="text-sm font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-light-border dark:bg-dark-border text-light-text-secondary dark:text-dark-text-secondary">Coming Soon</span>
+          <span class="text-sm font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-accent/10 text-accent">Pro</span>
         </div>
-        <h2 class="text-lg font-semibold text-light-text dark:text-dark-text mb-2">
+        <h2 class="text-lg font-semibold text-light-text dark:text-dark-text group-hover:text-accent transition-colors mb-2">
           Varax Compliance
         </h2>
-        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+        <p class="text-sm text-light-text-secondary dark:text-dark-text-secondary mb-4">
           SOC2 compliance automation for Kubernetes. Installation, configuration, scanning, reports, and remediation.
         </p>
-      </div>
+        <span class="text-sm text-accent font-medium">Get started &rarr;</span>
+      </a>
     </div>
   </div>
 </Base>

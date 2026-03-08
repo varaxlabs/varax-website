@@ -1,0 +1,103 @@
+---
+title: Quickstart
+description: Install Varax and run your first compliance scan in 5 minutes.
+section: compliance
+order: 1
+---
+
+## Prerequisites
+
+- A running Kubernetes cluster (v1.21+)
+- [Helm](https://helm.sh/) v3 installed
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) configured to access your cluster
+- A Varax Pro license for full reports (optional — free tier works without one)
+
+## Install the Varax Operator
+
+Add the Varax Helm repository and install:
+
+```bash
+helm repo add varaxlabs https://charts.varax.io
+helm repo update
+helm install varax varaxlabs/operator
+```
+
+Verify the operator is running:
+
+```bash
+kubectl get pods -l app.kubernetes.io/name=varax
+```
+
+You should see:
+
+```
+NAME                     READY   STATUS    RESTARTS   AGE
+varax-6f8b9c6d4f-x2k9p  1/1     Running   0          30s
+```
+
+## Run Your First Scan
+
+```bash
+varax scan
+```
+
+Varax automatically discovers your cluster configuration and runs 109 security checks across CIS Benchmark, NSA/CISA, SOC2, and Pod Security Standards.
+
+You'll see a compliance score and summary in your terminal:
+
+```
+Compliance Score: 87/100
+
+  Pass:  78    Fail: 9    Warn: 15    Skip: 7
+
+Framework: SOC2 Trust Services Criteria
+Duration:  12.4s
+```
+
+## View Detailed Status
+
+```bash
+varax status
+```
+
+This shows your latest scan results, control status, and historical trends.
+
+To see individual control details:
+
+```bash
+varax status --controls
+```
+
+## Generate a Report (Pro)
+
+With a Pro license, generate an audit-ready HTML report:
+
+```bash
+varax report --format html
+```
+
+This creates a comprehensive compliance report including executive summary, control status, evidence packages, remediation guidance, and shared responsibility analysis.
+
+To generate a PDF, open the HTML report in your browser and use Print → Save as PDF.
+
+## Activate a Pro License
+
+If you have a Pro license key:
+
+```bash
+varax license activate YOUR_LICENSE_KEY
+```
+
+Verify activation:
+
+```bash
+varax license status
+```
+
+## Next Steps
+
+- [Configure](/docs/compliance/configuration) the operator with ComplianceConfig custom resources
+- Learn about the [109 security checks](/docs/compliance/scanning) Varax runs
+- Understand [report types](/docs/compliance/reports) and what's included
+- Set up [auto-remediation](/docs/compliance/remediation) for failing checks
+- Review the full [SOC2 control mapping](/docs/compliance/soc2-mapping)

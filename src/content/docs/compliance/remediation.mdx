@@ -1,0 +1,83 @@
+---
+title: Remediation
+description: Automatically fix failing compliance checks with Varax auto-remediation.
+section: compliance
+order: 5
+---
+
+## Overview
+
+Varax auto-remediation uses a **plan/execute** model with built-in safety checks. It identifies failing checks, generates a remediation plan, and optionally applies fixes to your cluster.
+
+## Dry-Run Mode (Free)
+
+Preview what remediation would change without applying anything:
+
+```bash
+varax scan --remediate --dry-run
+```
+
+This shows you exactly which resources would be modified and how — without touching your cluster.
+
+## Full Remediation (Pro)
+
+Apply fixes to failing checks:
+
+```bash
+varax remediate
+```
+
+Or combine with a scan:
+
+```bash
+varax scan --remediate
+```
+
+Varax generates a remediation report for every run, stored in BoltDB for audit trail purposes.
+
+## What Gets Remediated
+
+| Remediator | What It Fixes |
+|-----------|---------------|
+| Security Context | Adds `runAsNonRoot`, drops capabilities, sets read-only root filesystem |
+| Pod Spec | Configures resource limits, removes host namespace access |
+| Service Account | Disables auto-mounted service account tokens where unnecessary |
+| Network Policy | Creates default-deny network policies for unprotected namespaces |
+| Limit Range | Adds default resource limits to namespaces without them |
+
+## What Requires Manual Intervention
+
+Some findings can't be auto-fixed safely:
+
+- **RBAC restructuring** — Changing role bindings requires understanding your authorization model
+- **Architecture changes** — Moving from host networking or privileged containers requires application changes
+- **Third-party workloads** — Helm-managed or operator-managed resources should be fixed at the source chart/operator
+
+Varax provides remediation guidance in reports for these cases.
+
+## Operator Mode
+
+In operator mode, auto-remediation runs on a schedule via the ComplianceConfig CRD:
+
+```yaml
+spec:
+  remediation:
+    autoRemediate: true
+    dryRun: false
+```
+
+This requires a Pro license. The operator will:
+
+1. Run a scan on the configured interval
+2. Generate a remediation plan for failing checks
+3. Apply fixes automatically
+4. Record a remediation report with before/after state
+5. Update Prometheus metrics
+
+## Safety Recommendations
+
+- **Always dry-run first** in a new environment
+- **Test in staging** before enabling auto-remediation in production
+- **Review remediation reports** after each run
+- **Exclude namespaces** that contain third-party workloads managed by other operators
+- **Start with `dryRun: true`** in operator mode and switch to `false` after validating

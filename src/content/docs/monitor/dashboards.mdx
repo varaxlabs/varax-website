@@ -1,0 +1,59 @@
+---
+title: Grafana Dashboards
+description: Set up and customize Grafana dashboards for Kubernetes CronJob monitoring.
+section: monitor
+order: 3
+---
+
+## Pre-Built Dashboard
+
+Varax Monitor includes a Grafana dashboard that gives you a complete view of every CronJob in your cluster.
+
+## Import Instructions
+
+1. Open Grafana in your browser
+2. Go to **Dashboards** → **Import**
+3. Paste the dashboard JSON from the [GitHub repo](https://github.com/varaxlabs/varax-monitor/tree/main/dashboards) or enter the dashboard ID
+4. Select your Prometheus data source
+5. Click **Import**
+
+## Dashboard Panels
+
+**CronJob Overview** — Table showing all CronJobs with last execution status, duration, next scheduled run, and suspension state.
+
+**Execution Timeline** — Time series chart showing success (green) and failure (red) events per CronJob over the selected time range.
+
+**Duration Trends** — Graph of execution duration per CronJob over time. Useful for spotting jobs that are getting slower.
+
+**Failure Rate** — Percentage of failed executions over a configurable time window, broken down by CronJob.
+
+**Missed Schedules** — Bar chart of missed schedule events per CronJob. Spikes indicate scheduling issues or resource pressure.
+
+## Customization
+
+### Filtering by Namespace
+
+Add a Grafana variable to filter by namespace:
+
+1. Go to **Dashboard Settings** → **Variables**
+2. Add a new variable named `namespace`
+3. Set query type to **Label values** for the `namespace` label
+4. Use `{__name__=~"cronjob_.*"}` as the metric filter
+5. Add `namespace="$namespace"` to each panel's PromQL query
+
+### Adjusting Thresholds
+
+The default duration threshold is 300 seconds. To change it, edit the panel's threshold settings in Grafana's panel editor.
+
+### Adding Custom Panels
+
+Common additions:
+
+- **CronJob count by namespace**: `count(cronjob_last_execution_status) by (namespace)`
+- **Total executions today**: `sum(increase(cronjob_execution_total[24h]))`
+- **Longest running job**: `max(cronjob_last_execution_duration_seconds)`
+
+## Requirements
+
+- Grafana 8.0 or later
+- Prometheus data source configured and scraping the Varax Monitor metrics endpoint

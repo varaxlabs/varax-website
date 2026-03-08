@@ -1,0 +1,57 @@
+---
+title: FAQ
+description: Frequently asked questions about Varax compliance scanning.
+section: compliance
+order: 7
+---
+
+## What Kubernetes versions are supported?
+
+Kubernetes v1.21 and above. Varax uses stable APIs and works with all major managed Kubernetes providers (EKS, AKS, GKE) and self-hosted clusters.
+
+## Does Varax work on managed Kubernetes (EKS, AKS, GKE)?
+
+Yes — managed Kubernetes is the primary target. On managed clusters, control plane checks (CIS sections 1-4) are reported as "Provider-Managed" rather than skipped. This gives your auditor a clear shared responsibility picture. Workload security checks (section 5, NSA/CISA, PSS, RBAC) run normally.
+
+## Does my cluster data leave my infrastructure?
+
+No. Varax runs entirely in your cluster. Scan results, evidence, and reports are stored locally in BoltDB. No data is sent to external servers. License validation uses an offline Ed25519 signature — no phone-home required.
+
+## What's the difference between Free and Pro?
+
+Both tiers run the same 109 security checks and produce the same compliance score. The difference:
+
+- **Free**: Terminal summary output, JSON for CI/CD, dry-run remediation preview
+- **Pro**: Audit-ready HTML reports with evidence packages, full auto-remediation, priority email support
+
+## How do I activate a Pro license?
+
+```bash
+varax license activate YOUR_LICENSE_KEY
+```
+
+Verify activation:
+
+```bash
+varax license status
+```
+
+## Can I use Varax in air-gapped environments?
+
+Yes. The operator runs entirely in-cluster with no external dependencies. License keys are validated using Ed25519 signature verification — no network call needed. There is a 5-day grace period after license expiration to allow for renewal in restricted environments.
+
+## How often should I run scans?
+
+Recommended: daily in production. The operator can run on a configurable interval (minimum 1 minute). For pre-audit preparation, hourly scans help you track remediation progress. For CI/CD, run on every deployment.
+
+## Does Varax support frameworks other than SOC2?
+
+SOC2 Trust Services Criteria is the current mapping framework. CIS Benchmark, NSA/CISA, and Pod Security Standards checks run independently of the SOC2 mapping. HIPAA and PCI-DSS framework mappings are planned for v2.
+
+## How does auto-remediation work?
+
+Varax uses a plan/execute model. It identifies failing checks, generates a remediation plan showing exactly what would change, and optionally applies fixes. You can preview changes with `--dry-run` before applying. See the [remediation guide](/docs/compliance/remediation) for details.
+
+## What resources does the operator need?
+
+Default resource requests: 128Mi memory, 100m CPU. The operator uses read-only cluster access for scanning and requires write access only when auto-remediation is enabled. Storage: a small PersistentVolume for BoltDB (1Gi is sufficient for months of scan history).

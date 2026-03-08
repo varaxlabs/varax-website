@@ -1,0 +1,75 @@
+---
+title: Metrics Reference
+description: Complete reference for all Prometheus metrics exported by Varax Monitor.
+section: monitor
+order: 2
+---
+
+## Overview
+
+Varax Monitor exports Prometheus metrics for every CronJob in your cluster. All metrics are labeled with `namespace` and `cronjob` for easy filtering and aggregation.
+
+## Metrics
+
+| Metric | Type | Labels | Description |
+|--------|------|--------|-------------|
+| `cronjob_last_execution_status` | Gauge | namespace, cronjob | Last execution result (1=success, 0=failure) |
+| `cronjob_last_execution_duration_seconds` | Gauge | namespace, cronjob | Duration of last execution in seconds |
+| `cronjob_execution_total` | Counter | namespace, cronjob, status | Total executions (status: `success` or `failure`) |
+| `cronjob_missed_schedules_total` | Counter | namespace, cronjob | Count of missed scheduled executions |
+| `cronjob_next_schedule_time` | Gauge | namespace, cronjob | Unix timestamp of next expected run |
+| `cronjob_is_suspended` | Gauge | namespace, cronjob | Whether the CronJob is suspended (1=yes, 0=no) |
+
+## Labels
+
+| Label | Description |
+|-------|-------------|
+| `namespace` | Kubernetes namespace of the CronJob |
+| `cronjob` | Name of the CronJob resource |
+| `status` | Execution result — `success` or `failure` (only on `cronjob_execution_total`) |
+
+## Example PromQL Queries
+
+**Currently failing CronJobs:**
+
+```promql
+cronjob_last_execution_status == 0
+```
+
+**Failure rate over the last 24 hours:**
+
+```promql
+sum(increase(cronjob_execution_total{status="failure"}[24h])) by (cronjob, namespace)
+```
+
+**Top 5 slowest CronJobs:**
+
+```promql
+topk(5, cronjob_last_execution_duration_seconds)
+```
+
+**CronJobs that missed schedules in the last hour:**
+
+```promql
+increase(cronjob_missed_schedules_total[1h]) > 0
+```
+
+**All suspended CronJobs:**
+
+```promql
+cronjob_is_suspended == 1
+```
+
+**Success rate per CronJob:**
+
+```promql
+sum(rate(cronjob_execution_total{status="success"}[7d])) by (cronjob)
+/
+sum(rate(cronjob_execution_total[7d])) by (cronjob)
+```
+
+## Relationship to kube-state-metrics
+
+Varax Monitor complements kube-state-metrics — it doesn't replace it. kube-state-metrics provides general Kubernetes object state (pod counts, deployment replicas, etc.). Varax Monitor adds CronJob-specific execution tracking that kube-state-metrics doesn't cover: execution duration, missed schedules, and per-run success/failure tracking.
+
+You can run both side by side with no conflicts.

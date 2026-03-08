@@ -1,0 +1,85 @@
+---
+title: SOC2 Control Mapping
+description: How Varax maps Kubernetes security checks to SOC2 Trust Services Criteria.
+section: compliance
+order: 6
+---
+
+## Overview
+
+Varax maps Kubernetes security checks to SOC2 Trust Services Criteria (TSC) controls. Each check is associated with one or more SOC2 controls, and control status is derived from the results of its constituent checks.
+
+## Control Mapping
+
+| Control | Name | Category | Checks |
+|---------|------|----------|--------|
+| CC5.1 | Control Environment | Governance | 4 |
+| CC5.2 | Control Activities | Governance | 6 |
+| CC6.1 | Logical Access Controls | Access Control | 8 |
+| CC6.2 | System Credentials | Access Control | 4 |
+| CC6.3 | Authorization Controls | Access Control | 6 |
+| CC6.6 | Security Event Monitoring | Monitoring | 3 |
+| CC6.7 | Data Transmission Security | Data Protection | 4 |
+| CC6.8 | Vulnerability Management | Security | 5 |
+| CC7.1 | Detection Activities | Monitoring | 4 |
+| CC7.2 | Incident Response | Operations | 3 |
+| CC7.3 | Threat Mitigation | Operations | 3 |
+| CC7.4 | Recovery Activities | Operations | 2 |
+| CC8.1 | Change Management | Operations | 4 |
+| A1.1 | System Availability | Availability | 3 |
+| A1.2 | Recovery Operations | Availability | 2 |
+
+## How Scoring Works
+
+Control status is derived from its mapped checks:
+
+| Status | Condition |
+|--------|-----------|
+| **Pass** | All mapped checks pass |
+| **Fail** | Any mapped check fails |
+| **Partial** | Some checks pass, some fail or warn |
+| **Not Assessed** | All mapped checks were skipped |
+
+The overall compliance score is calculated as:
+
+```
+Score = (Passing Controls / Assessed Controls) × 100
+```
+
+Controls where all checks are skipped or provider-managed are excluded from the score calculation.
+
+## Example: CC6.1 — Logical Access Controls
+
+CC6.1 maps to 8 checks covering:
+
+- RBAC configuration (cluster roles, role bindings)
+- Service account token management
+- Default namespace restrictions
+- Pod security admission
+
+If 7 of 8 checks pass and 1 fails, CC6.1 status is **Partial**.
+
+## Shared Responsibility on Managed Kubernetes
+
+On managed clusters (EKS, AKS, GKE), many CIS checks cover provider-managed components (API server flags, etcd encryption, scheduler config). These are reported as **Provider-Managed** in Varax reports.
+
+Your auditor needs to see both:
+
+- **Customer-controlled**: RBAC, pod security, network policies, secrets management, workload configuration — these are your responsibility
+- **Provider-managed**: Control plane configuration, etcd encryption at rest, API server TLS — these are covered by your cloud provider's compliance certifications (e.g., AWS SOC2 report)
+
+Varax reports include a shared responsibility section that clearly maps which controls fall where, giving your auditor a complete picture without you needing to compile this manually.
+
+## Using Control Data in CI/CD
+
+Export control status as JSON for pipeline integration:
+
+```bash
+varax status --controls --json
+```
+
+Fail a pipeline if the compliance score drops below a threshold:
+
+```bash
+varax scan --json | jq -e '.summary.score >= 80'
+```

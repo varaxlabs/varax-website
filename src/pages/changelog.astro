@@ -1,0 +1,75 @@
+---
+import Base from '@layouts/Base.astro';
+
+const releases = [
+  {
+    version: 'v1.0.0',
+    date: 'March 2026',
+    product: 'Varax Compliance',
+    changes: [
+      '109 security checks across CIS Benchmark, NSA/CISA, SOC2, and Pod Security Standards',
+      'SOC2 Trust Services Criteria mapping with 16 controls',
+      'HTML and JSON report generation',
+      'Auto-remediation engine with dry-run mode',
+      'Auto-enable audit logging on EKS',
+      'Interactive TUI explorer with vim keybindings',
+      'BoltDB local storage for scan history and evidence',
+      'Helm chart with production-hardened defaults',
+      'Ed25519-signed license key validation',
+      'Shell completion for bash, zsh, and fish',
+    ],
+  },
+  {
+    version: 'v0.1.0',
+    date: 'February 2026',
+    product: 'Varax Monitor',
+    changes: [
+      'Auto-discovery of all CronJobs via Kubernetes Informers',
+      'Prometheus metrics: execution status, duration, missed schedules, suspension state',
+      'Pre-built Grafana dashboard',
+      'AlertManager rules for common failure modes',
+      'Lightweight runtime: <50MB memory, read-only cluster access',
+      'Apache 2.0 licensed — free forever',
+    ],
+  },
+];
+---
+
+<Base title="Changelog" description="Release notes and updates for Varax products.">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
+    <h1 class="text-3xl sm:text-4xl font-semibold text-light-text dark:text-dark-text mb-3">
+      Changelog
+    </h1>
+    <p class="text-base text-light-text-secondary dark:text-dark-text-secondary mb-12">
+      Release notes and updates for Varax products.
+    </p>
+
+    <div class="space-y-12">
+      {releases.map((release) => (
+        <div class="relative pl-8 border-l-2 border-accent/30">
+          <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-accent"></div>
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <span class="text-sm font-mono font-semibold text-light-text dark:text-dark-text px-2 py-0.5 rounded bg-light-surface dark:bg-dark-surface border border-light-border dark:border-dark-border">
+              {release.version}
+            </span>
+            <span class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+              {release.date}
+            </span>
+            <span class="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-accent/10 text-accent">
+              {release.product}
+            </span>
+          </div>
+          <ul class="space-y-1.5">
+            {release.changes.map((change) => (
+              <li class="flex items-start gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+                <span class="text-accent mt-1.5 shrink-0">&#8226;</span>
+                {change}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</Base>

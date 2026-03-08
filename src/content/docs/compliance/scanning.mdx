@@ -1,0 +1,89 @@
+---
+title: Scanning
+description: How Varax scans your cluster and the 109 security checks it runs.
+section: compliance
+order: 3
+---
+
+## How Scanning Works
+
+When you run `varax scan`, the scanner:
+
+1. **Loads all registered checks** from the check registry
+2. **Pre-fetches Kubernetes resources** using paginated list calls (500 items per page) into a shared cache
+3. **Runs each check concurrently** with a 30-second per-check timeout
+4. **Maps results to SOC2 controls** using the compliance mapper
+5. **Calculates a compliance score** based on passing vs. assessed controls
+
+Each check is a pure function that queries the Kubernetes API and returns a pass/fail/warn/skip result with evidence.
+
+## Benchmark Coverage
+
+| Benchmark | Checks | Focus Area |
+|-----------|--------|------------|
+| CIS Kubernetes Benchmark | 85 | Full Kubernetes security baseline — API server, etcd, controller manager, kubelet, workload security |
+| NSA/CISA Hardening Guide | 15 | U.S. government hardening recommendations — 6 unique checks + 9 delegating to CIS |
+| Pod Security Standards | 5 | Namespace-level pod security enforcement |
+| RBAC Analysis | 4 | Least-privilege access control verification |
+| **Total** | **109** | |
+
+## Managed Kubernetes
+
+On managed clusters (EKS, AKS, GKE), control plane checks (CIS sections 1-4) are reported as **Provider-Managed** rather than skipped. This gives your auditor a clear shared responsibility picture:
+
+- **~54 checks** are directly actionable (sections 5.x, NSA/CISA, PSS, RBAC)
+- **~55 checks** are provider-managed (reported for auditor context)
+
+All 109 checks appear in reports — the provider-managed ones inform auditors about who owns what.
+
+## CLI Usage
+
+Run a full scan:
+
+```bash
+varax scan
+```
+
+Filter by benchmark:
+
+```bash
+varax scan --benchmark cis
+varax scan --benchmark nsa
+varax scan --benchmark pss
+```
+
+Output as JSON for CI/CD pipelines:
+
+```bash
+varax scan --json
+```
+
+Scan with auto-remediation (Pro):
+
+```bash
+varax scan --remediate
+varax scan --remediate --dry-run  # Preview only
+```
+
+## Check Severity Levels
+
+Each check has an assigned severity:
+
+| Severity | Description | Example |
+|----------|-------------|---------|
+| Critical | Immediate security risk | Privileged containers running |
+| High | Significant security gap | No network policies defined |
+| Medium | Best practice violation | Default service accounts in use |
+| Low | Minor hardening opportunity | Resource limits not set |
+| Info | Informational finding | Provider-managed control |
+
+## Understanding Results
+
+Each check result includes:
+
+- **Status**: Pass, Fail, Warn, Skip, or Provider-Managed
+- **Severity**: Critical through Info
+- **Evidence**: Specific resources that caused the finding (kind, name, namespace, field, value)
+- **Message**: Human-readable explanation of the finding
+
+Use `varax status --controls` to see how check results roll up into SOC2 control assessments.

@@ -1,0 +1,124 @@
+---
+title: Configuration
+description: Configure the Varax operator with ComplianceConfig custom resources.
+section: compliance
+order: 2
+---
+
+## ComplianceConfig CRD
+
+The Varax operator is configured through `ComplianceConfig` custom resources. A default config is created during Helm installation.
+
+```yaml
+apiVersion: compliance.varax.io/v1alpha1
+kind: ComplianceConfig
+metadata:
+  name: default
+spec:
+  framework: soc2
+  excludeNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+  scanInterval: 24h
+  remediation:
+    autoRemediate: false
+    dryRun: true
+  reports:
+    formats:
+      - html
+      - json
+  alerting:
+    scoreThreshold: 80
+    criticalViolationThreshold: 0
+```
+
+## Field Reference
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `framework` | string | `soc2` | Compliance framework to map against (`soc2`) |
+| `excludeNamespaces` | []string | system namespaces | Namespaces to skip during scanning |
+| `scanInterval` | duration | `24h` | How often to run scans (minimum: `1m`) |
+| `remediation.autoRemediate` | bool | `false` | Enable automatic remediation (Pro only) |
+| `remediation.dryRun` | bool | `true` | Preview remediation without applying changes |
+| `reports.formats` | []string | `["json"]` | Report output formats: `html`, `json` |
+| `alerting.scoreThreshold` | int | `80` | Alert when compliance score drops below this value |
+| `alerting.criticalViolationThreshold` | int | `0` | Alert when critical violations exceed this count |
+
+## Namespace Exclusions
+
+By default, Varax skips Kubernetes system namespaces (`kube-system`, `kube-public`, `kube-node-lease`) to avoid false positives on infrastructure components.
+
+Add your own exclusions for namespaces that shouldn't be scanned:
+
+```yaml
+spec:
+  excludeNamespaces:
+    - kube-system
+    - kube-public
+    - kube-node-lease
+    - monitoring
+    - istio-system
+```
+
+## Scan Interval
+
+The minimum scan interval is 1 minute to prevent API server overload. For production clusters, we recommend 24 hours:
+
+```yaml
+spec:
+  scanInterval: 24h
+```
+
+For development or pre-audit preparation, you can run more frequently:
+
+```yaml
+spec:
+  scanInterval: 1h
+```
+
+## Helm Values
+
+Common Helm overrides for the operator deployment:
+
+```yaml
+# values.yaml
+replicaCount: 1
+
+resources:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+  limits:
+    memory: 256Mi
+    cpu: 200m
+
+metrics:
+  enabled: true
+  port: 8080
+
+serviceMonitor:
+  enabled: false  # Enable if using Prometheus Operator
+```
+
+Install with custom values:
+
+```bash
+helm install varax varaxlabs/operator -f values.yaml
+```
+
+## Viewing Current Configuration
+
+```bash
+kubectl get complianceconfigs
+kubectl describe complianceconfig default
+```
+
+The status subresource shows current scan state:
+
+```
+kubectl get complianceconfigs -o wide
+NAME      FRAMEWORK   SCORE   VIOLATIONS   PHASE       AGE
+default   soc2        87      9            Compliant   24h
+```

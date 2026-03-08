@@ -1,0 +1,54 @@
+---
+title: FAQ
+description: Frequently asked questions about Varax Monitor.
+section: monitor
+order: 5
+---
+
+## Does Varax Monitor work with kube-state-metrics?
+
+Yes, it complements it. kube-state-metrics provides general Kubernetes object metrics (pod counts, deployment replicas, resource usage). Varax Monitor adds CronJob-specific execution tracking — duration, success/failure per run, missed schedules — that kube-state-metrics doesn't cover. Run both side by side with no conflicts.
+
+## What Kubernetes versions are supported?
+
+Kubernetes v1.21 and above. Works with all major managed providers (EKS, AKS, GKE) and self-hosted clusters.
+
+## Can I monitor specific namespaces only?
+
+Yes. Configure via Helm values:
+
+```yaml
+# values.yaml
+namespaces:
+  - production
+  - staging
+```
+
+```bash
+helm install varax-monitor varaxlabs/varax-monitor -f values.yaml
+```
+
+By default, Varax Monitor watches all namespaces.
+
+## How much resources does it use?
+
+- **Memory**: less than 50MB
+- **CPU**: less than 0.05 cores
+- **Storage**: None (stateless — all data is in Prometheus)
+- **Access**: Read-only cluster role
+
+## Does it require Prometheus?
+
+Yes. Varax Monitor exports metrics on a Prometheus-compatible endpoint. You need Prometheus (or a compatible scraper like Grafana Agent, Victoria Metrics, or Datadog agent with Prometheus scraping enabled) to collect the metrics. We recommend [kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack).
+
+## Is it really free?
+
+Yes. Apache 2.0 licensed, free forever. No per-job pricing, no telemetry, no usage limits, no vendor lock-in. The source code is on [GitHub](https://github.com/varaxlabs/varax-monitor).
+
+## How does it discover CronJobs?
+
+Varax Monitor uses Kubernetes Informers to watch for CronJob resources across all namespaces (or your configured namespaces). When a new CronJob is created, it's automatically detected and monitored. No annotations, labels, or per-job configuration required.
+
+## Can I use it without Grafana?
+
+Yes. The metrics are standard Prometheus metrics accessible at the `/metrics` endpoint. Grafana dashboards are optional — you can query metrics directly with PromQL, use any Prometheus-compatible visualization tool, or build your own dashboards in whatever tool you prefer.

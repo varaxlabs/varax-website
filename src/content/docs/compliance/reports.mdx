@@ -1,0 +1,81 @@
+---
+title: Reports
+description: Generate audit-ready compliance reports in HTML, JSON, and terminal formats.
+section: compliance
+order: 4
+---
+
+## Report Types
+
+Varax generates two types of reports:
+
+**Readiness Report** — Operational view for your engineering team. Shows every check result, failing resources, and remediation steps.
+
+**Executive Report** — High-level view for leadership and auditors. Focuses on compliance score, control status, and trends.
+
+## Formats
+
+| Format | Availability | Description |
+|--------|-------------|-------------|
+| Terminal | Free | Styled compliance summary in your terminal |
+| JSON | Free | Machine-readable output for CI/CD integration |
+| HTML | Pro | Full audit-ready report with evidence and guidance |
+
+## CLI Usage
+
+Generate a terminal report:
+
+```bash
+varax report
+varax report --format terminal
+```
+
+Generate an HTML report (Pro):
+
+```bash
+varax report --format html
+```
+
+Generate an executive report:
+
+```bash
+varax report --type executive --format html
+```
+
+Output JSON for CI/CD:
+
+```bash
+varax report --format json
+```
+
+## What's in a Pro Report
+
+The HTML report includes:
+
+- **Executive summary** — Compliance score, scan metadata, pass/fail/warn/skip counts
+- **SOC2 control status** — Each of the 16 mapped controls with Pass/Fail/Partial status
+- **Detailed findings** — Every failing check with affected resources and field-level evidence
+- **Remediation guidance** — Specific fix instructions for ~80 check types
+- **Shared responsibility section** — Which controls are provider-managed vs. customer-controlled
+- **Historical trends** — Score changes over time from BoltDB scan history
+- **Evidence packages** — RBAC snapshots, network policy inventory, audit log status, encryption configuration
+
+## PDF Generation
+
+Varax generates HTML reports. To create a PDF:
+
+1. Open the HTML report in your browser
+2. Use **File → Print** (or Ctrl+P / Cmd+P)
+3. Select **Save as PDF** as the destination
+4. Print
+
+The HTML report includes print-friendly CSS that optimizes layout for PDF output.
+
+## Free vs Pro
+
+The free tier runs the same 109 checks and produces the same compliance score. The difference is output:
+
+- **Free**: Terminal summary with score, pass/fail counts, and control status table
+- **Pro**: Full HTML report with evidence, remediation guidance, shared responsibility analysis, and historical trends
+
+View a [sample Pro report](/sample-report) to see the difference.
