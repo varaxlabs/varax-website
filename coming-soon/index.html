@@ -413,6 +413,20 @@
       background: var(--accent);
     }
 
+    .product-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      margin-top: 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+
+    .product-cta:hover { gap: 0.625rem; }
+
     /* ── Highlights ── */
     .highlights {
       max-width: 72rem;
@@ -644,6 +658,7 @@
             <li>Under 50MB memory, under 0.05 CPU</li>
             <li>Apache 2.0 licensed, no telemetry</li>
           </ul>
+          <a href="https://github.com/varaxlabs/onax" target="_blank" rel="noopener noreferrer" class="product-cta">Get Onax now on GitHub &rarr;</a>
         </div>
 
       </div>
