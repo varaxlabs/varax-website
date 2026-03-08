@@ -5,7 +5,7 @@ pages_build_output_dir = "dist"
 
 [[kv_namespaces]]
 binding = "LICENSE_KV"
-id = "<created-at-deploy-time>"
+id = "c6ed2f8c91094775a349dc2f5fd0584e"
 
 # Secrets (set via `npx wrangler pages secret put`):
 # ED25519_SEED
