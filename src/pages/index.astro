@@ -6,7 +6,7 @@ import CodeBlock from '@components/CodeBlock.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 ---
 
-<Base title="Varax" description="Kubernetes tools that keep your clusters running and compliant. Open-source monitoring and compliance automation.">
+<Base title="Varax" description="SOC2 compliance for Kubernetes. One CLI command. Auto-discovers misconfigurations, maps to controls, generates audit-ready reports.">
 
   <!-- Hero -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
@@ -26,8 +26,90 @@ import SectionHeading from '@components/SectionHeading.astro';
     <TerminalDemo />
   </section>
 
-  <!-- Integration Bar -->
+  <!-- Data Sovereignty -->
   <section class="border-y border-light-border bg-light-surface">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <h2 class="text-2xl sm:text-3xl font-semibold text-light-text mb-10">Your compliance data stays yours.</h2>
+      <div class="grid md:grid-cols-2 gap-10 items-start">
+        <div class="space-y-4 text-base text-light-text-secondary leading-relaxed">
+          <p>Most compliance tools want your cluster data on their servers. Varax doesn't.</p>
+          <p>No SaaS dashboard phoning home. No vendor with a copy of your cluster topology. No API keys to rotate when they get breached.</p>
+          <p>Varax runs entirely inside your cluster — air-gapped compatible, SOC2-ready, enterprise-approved.</p>
+        </div>
+        <div class="rounded-lg overflow-hidden border border-code-border bg-code-bg shadow-lg">
+          <div class="flex items-center gap-2 px-4 py-2.5 border-b border-code-border bg-code-titlebar">
+            <div class="flex gap-1.5">
+              <span class="w-3 h-3 rounded-full bg-[#FF5F57]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#FEBC2E]"></span>
+              <span class="w-3 h-3 rounded-full bg-[#28C840]"></span>
+            </div>
+            <span class="text-xs text-code-text-secondary font-mono ml-2">terminal</span>
+          </div>
+          <div class="p-4 sm:p-6 font-mono text-sm leading-relaxed">
+            <div><span class="text-accent">$</span><span class="text-code-text"> netstat -an | grep varax</span></div>
+            <div class="mt-3 text-code-text-secondary">(no external connections)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+    <SectionHeading title="Built for Kubernetes teams" subtitle="Everything you need for Kubernetes compliance, nothing you don't." />
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[
+        { title: 'Auto-Discovery', desc: 'Scans your entire cluster automatically. No configuration files to maintain.' },
+        { title: 'SOC2 Control Mapping', desc: 'Every check maps to specific SOC2 Trust Services Criteria.' },
+        { title: 'Audit-Ready Reports', desc: 'Generate the PDF your auditor needs with one CLI command.' },
+        { title: 'Auto-Enable Audit Logging', desc: 'Programmatically enables K8s audit logging on EKS, AKS, and GKE.' },
+        { title: 'Auto-Remediation', desc: 'Opt-in fixes for failing checks with dry-run mode.' },
+        { title: 'CIS Benchmark Checks', desc: 'Validates against CIS Kubernetes Benchmarks with HIPAA and PCI-DSS on the roadmap.' },
+      ].map((feature) => (
+        <div class="p-6 rounded-xl border border-light-border bg-light-surface">
+          <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>
+          <p class="text-sm text-light-text-secondary">{feature.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="border-y border-light-border bg-light-surface">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <SectionHeading title="How It Works" subtitle="From install to compliance report in three steps." />
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">1</span>
+            <h3 class="text-lg font-semibold text-light-text">Install</h3>
+          </div>
+          <CodeBlock title="terminal">helm install varax varaxlabs/operator</CodeBlock>
+        </div>
+
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">2</span>
+            <h3 class="text-lg font-semibold text-light-text">Scan</h3>
+          </div>
+          <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax scan\n<span class="text-success">&#10003;</span> RBAC Configuration\n<span class="text-success">&#10003;</span> Network Policies\n<span class="text-warning">&#9888;</span> Pod Security Standards\n\nScore: <span class="text-success">87/100</span>`} />
+        </div>
+
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">3</span>
+            <h3 class="text-lg font-semibold text-light-text">Report</h3>
+          </div>
+          <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax report --format pdf\n\n<span class="text-success">&#10003;</span> Report generated\n  varax-soc2-report.pdf (42 pages)`} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration Bar -->
+  <section class="border-b border-light-border bg-light-surface">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12 text-light-text-secondary">
         <div class="flex items-center gap-2.5" title="Kubernetes">
@@ -54,72 +136,6 @@ import SectionHeading from '@components/SectionHeading.astro';
           <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
           <span class="text-sm font-medium">GitHub</span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works -->
-  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-    <SectionHeading title="How It Works" subtitle="From install to compliance report in three steps." />
-
-    <div class="grid md:grid-cols-3 gap-8">
-      <div>
-        <div class="flex items-center gap-3 mb-4">
-          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">1</span>
-          <h3 class="text-lg font-semibold text-light-text">Install</h3>
-        </div>
-        <CodeBlock title="terminal">helm install varax varaxlabs/operator</CodeBlock>
-      </div>
-
-      <div>
-        <div class="flex items-center gap-3 mb-4">
-          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">2</span>
-          <h3 class="text-lg font-semibold text-light-text">Scan</h3>
-        </div>
-        <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax scan\n<span class="text-success">&#10003;</span> RBAC Configuration\n<span class="text-success">&#10003;</span> Network Policies\n<span class="text-warning">&#9888;</span> Pod Security Standards\n\nScore: <span class="text-success">87/100</span>`} />
-      </div>
-
-      <div>
-        <div class="flex items-center gap-3 mb-4">
-          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white text-sm font-semibold">3</span>
-          <h3 class="text-lg font-semibold text-light-text">Report</h3>
-        </div>
-        <CodeBlock title="terminal" code={`<span class="text-accent">$</span> varax report --format pdf\n\n<span class="text-success">&#10003;</span> Report generated\n  varax-soc2-report.pdf (42 pages)`} />
-      </div>
-    </div>
-  </section>
-
-  <!-- Data Sovereignty -->
-  <section class="border-y border-light-border bg-light-surface">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-      <h2 class="text-2xl sm:text-3xl font-semibold text-light-text mb-6">Your compliance data stays yours.</h2>
-      <div class="space-y-4 text-base text-light-text-secondary leading-relaxed">
-        <p>Most compliance tools want your cluster data on their servers. Varax doesn't.</p>
-        <p>No SaaS dashboard phoning home. No vendor with a copy of your cluster topology. No API keys to rotate when they get breached.</p>
-        <p>Varax runs entirely inside your cluster — air-gapped compatible, SOC2-ready, enterprise-approved.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Feature Grid -->
-  <section class="border-y border-light-border bg-light-surface">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-      <SectionHeading title="Built for Kubernetes teams" subtitle="Everything you need for Kubernetes compliance, nothing you don't." />
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { title: 'Auto-Discovery', desc: 'Scans your entire cluster automatically. No configuration files to maintain.' },
-          { title: 'SOC2 Control Mapping', desc: 'Every check maps to specific SOC2 Trust Services Criteria.' },
-          { title: 'Audit-Ready Reports', desc: 'Generate the PDF your auditor needs with one CLI command.' },
-          { title: 'Auto-Enable Audit Logging', desc: 'Programmatically enables K8s audit logging on EKS, AKS, and GKE.' },
-          { title: 'Auto-Remediation', desc: 'Opt-in fixes for failing checks with dry-run mode.' },
-          { title: 'CIS Benchmark Checks', desc: 'Validates against CIS Kubernetes Benchmarks with HIPAA and PCI-DSS on the roadmap.' },
-        ].map((feature) => (
-          <div class="p-6 rounded-xl border border-light-border bg-light-bg">
-            <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>
-            <p class="text-sm text-light-text-secondary">{feature.desc}</p>
-          </div>
-        ))}
       </div>
     </div>
   </section>
