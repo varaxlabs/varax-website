@@ -89,7 +89,7 @@ body {
 }
 
 .prose pre {
-  @apply font-mono text-sm bg-code-bg text-code-text p-4 rounded-lg overflow-x-auto mb-4 border border-code-border relative;
+  @apply font-mono text-sm bg-code-bg text-code-text p-4 pb-10 rounded-lg overflow-x-auto mb-4 border border-code-border relative;
 }
 
 .prose pre code {
@@ -126,7 +126,7 @@ body {
 
 /* Copy button for code blocks */
 .copy-btn {
-  @apply absolute top-2.5 right-2.5 p-1.5 rounded-md text-code-text-secondary hover:text-code-text hover:bg-code-border transition-colors;
+  @apply absolute bottom-2 right-2.5 p-1.5 rounded-md text-code-text-secondary hover:text-code-text hover:bg-code-border transition-colors;
 }
 
 .copy-btn.copied {
