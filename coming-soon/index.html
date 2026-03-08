@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Varax — SOC2 Compliance for Kubernetes</title>
+  <meta name="description" content="SOC2 compliance for Kubernetes. One CLI command. Auto-discovers misconfigurations, maps to controls, generates audit-ready reports. Coming soon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --accent: #E85D3A;
+      --accent-light: #F07052;
+      --bg: #FAF9F6;
+      --surface: #F5F3EF;
+      --border: #E8E2D8;
+      --text: #1A1F28;
+      --text-secondary: #6B7280;
+      --code-bg: #F0EDE7;
+      --code-border: #DDD8CF;
+      --code-text: #3A3630;
+      --code-titlebar: #E8E4DC;
+      --success: #22C55E;
+      --warning: #EAB308;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 128px;
+      z-index: 9999;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes terminalBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .animate-fade-up {
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-fade-in {
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.35s; }
+    .delay-4 { animation-delay: 0.5s; }
+    .delay-5 { animation-delay: 0.65s; }
+    .delay-6 { animation-delay: 0.8s; }
+    .delay-7 { animation-delay: 0.95s; }
+
+    /* ── Nav ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      background: rgba(250, 249, 246, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-badge {
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(232, 93, 58, 0.1);
+      color: var(--accent);
+    }
+
+    .nav-link {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .nav-link:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 38rem;
+      margin: 0 auto 2.5rem;
+      line-height: 1.65;
+    }
+
+    /* ── Email form ── */
+    .email-form {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 28rem;
+      margin: 0 auto;
+    }
+
+    .email-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: white;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .email-input::placeholder { color: #B0A898; }
+    .email-input:focus { border-color: var(--accent); }
+
+    .email-btn {
+      padding: 0.75rem 1.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .email-btn:hover { background: var(--accent-light); }
+    .email-btn:active { transform: scale(0.97); }
+
+    .email-note {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    /* ── Terminal ── */
+    .terminal-section {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .terminal {
+      max-width: 44rem;
+      margin: 0 auto;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--code-border);
+      background: var(--code-bg);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--code-border);
+      background: var(--code-titlebar);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 0.375rem;
+    }
+
+    .terminal-dots span {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+    }
+
+    .terminal-dots span:nth-child(1) { background: #FF5F57; }
+    .terminal-dots span:nth-child(2) { background: #FEBC2E; }
+    .terminal-dots span:nth-child(3) { background: #28C840; }
+
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-left: 0.5rem;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      color: var(--code-text);
+      min-height: 14rem;
+    }
+
+    .terminal-line {
+      opacity: 0;
+      animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .t-prompt { color: var(--accent); }
+    .t-cmd { color: var(--code-text); }
+    .t-muted { color: var(--text-secondary); }
+    .t-success { color: var(--success); }
+    .t-warning { color: #D97706; }
+    .t-spacer { height: 0.85rem; }
+
+    .cursor {
+      display: inline-block;
+      width: 0.5rem;
+      height: 1.1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: terminalBlink 1s step-end infinite;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Products Section ── */
+    .products {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .products-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .products-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .products-heading {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 3rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .products-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .product-card {
+      padding: 2rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      background: white;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .product-card:hover {
+      border-color: rgba(232, 93, 58, 0.3);
+      box-shadow: 0 4px 16px rgba(232, 93, 58, 0.06);
+    }
+
+    .product-tag {
+      display: inline-block;
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .product-tag.oss {
+      background: rgba(34, 197, 94, 0.1);
+      color: #16A34A;
+    }
+
+    .product-tag.pro {
+      background: rgba(232, 93, 58, 0.1);
+      color: var(--accent);
+    }
+
+    .product-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      line-height: 1.55;
+    }
+
+    .product-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .product-features li {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.45;
+    }
+
+    .product-features li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 0.375rem;
+      height: 0.375rem;
+      margin-top: 0.375rem;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ── Highlights ── */
+    .highlights {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .highlights-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .highlight-item {
+      text-align: center;
+    }
+
+    .highlight-value {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .highlight-value .accent { color: var(--accent); }
+
+    .highlight-label {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* ── Data sovereignty banner ── */
+    .sovereignty {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sovereignty-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    .sovereignty-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      background: rgba(232, 93, 58, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sovereignty-icon svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--accent);
+    }
+
+    .sovereignty h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .sovereignty p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      max-width: 32rem;
+      line-height: 1.6;
+    }
+
+    .sovereignty-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      padding: 0.5rem 1rem;
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 0.375rem;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .email-form { flex-direction: column; }
+      .email-btn { padding: 0.85rem; }
+      .terminal-section { padding: 0 1rem 3rem; }
+      .terminal-body { padding: 1rem; font-size: 0.75rem; }
+      .products-inner { padding: 3rem 1rem; }
+      .highlights { padding: 3rem 1rem; }
+      .sovereignty-inner { padding: 3rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <svg height="32" viewBox="0 0 300 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(0,0)">
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+              <polygon points="32,4 8,16 8,36 32,60 56,36 56,16" fill="#E8E8E0" stroke="#E8E2D8" stroke-width="0.50"/>
+              <polygon points="32,12 16,20 16,34 32,50 48,34 48,20" fill="none" stroke="#B0A898" stroke-width="0.80"/>
+              <polyline points="22,20 32,42 42,20" fill="none" stroke="#E85D3A" stroke-width="1.50" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </g>
+          <text x="64" y="30" font-family="DM Sans, sans-serif" font-weight="600" font-size="18" letter-spacing="0.04em" fill="#1A1F28">VARAX</text>
+        </svg>
+      </a>
+      <span class="nav-badge">Coming Soon</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-label animate-fade-up delay-1">Kubernetes Security &amp; Compliance</span>
+    <h1 class="animate-fade-up delay-2">
+      SOC2 compliance for Kubernetes.<br>One CLI command.
+    </h1>
+    <p class="animate-fade-up delay-3">
+      Auto-discovers misconfigurations. Maps to SOC2 controls. Generates the PDF your auditor wants. And your data never leaves your cluster.
+    </p>
+    <div class="animate-fade-up delay-4">
+      <form class="email-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Added to waitlist'; this.querySelector('button').style.background='#16A34A'; this.querySelector('input').disabled=true;">
+        <input type="email" class="email-input" placeholder="you@company.com" required>
+        <button type="submit" class="email-btn">Get Early Access</button>
+      </form>
+      <p class="email-note">Join the waitlist. No spam, just launch updates.</p>
+    </div>
+  </section>
+
+  <!-- Terminal Demo -->
+  <section class="terminal-section animate-fade-up delay-5">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots"><span></span><span></span><span></span></div>
+        <span class="terminal-title">terminal</span>
+      </div>
+      <div class="terminal-body" id="terminal"></div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="highlights animate-fade-in delay-6">
+    <div class="highlights-grid">
+      <div class="highlight-item">
+        <div class="highlight-value">&lt;60<span class="accent">s</span></div>
+        <div class="highlight-label">Install time</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">0</div>
+        <div class="highlight-label">External connections</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">42<span class="accent">+</span></div>
+        <div class="highlight-label">SOC2 controls mapped</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">1</div>
+        <div class="highlight-label">Command to compliance</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="products">
+    <div class="products-inner animate-fade-in delay-7">
+      <p class="products-label">Two Products. One Mission.</p>
+      <h2 class="products-heading">Kubernetes compliance and observability.</h2>
+      <div class="products-grid">
+
+        <div class="product-card">
+          <span class="product-tag pro">Free &amp; Pro</span>
+          <h3>Varax</h3>
+          <p class="subtitle">SOC2 compliance automation for Kubernetes. Scan, report, remediate.</p>
+          <ul class="product-features">
+            <li>Auto-discovers misconfigurations across your cluster</li>
+            <li>Maps findings to SOC2 Trust Services Criteria</li>
+            <li>Generates audit-ready PDF reports</li>
+            <li>Auto-enables Kubernetes audit logging</li>
+            <li>Opt-in auto-remediation with dry-run mode</li>
+            <li>CIS Benchmark validation</li>
+          </ul>
+        </div>
+
+        <div class="product-card">
+          <span class="product-tag oss">Open Source</span>
+          <h3>Onax</h3>
+          <p class="subtitle">CronJob monitoring for Kubernetes. Know when jobs fail, hang, or miss their schedule.</p>
+          <ul class="product-features">
+            <li>Auto-discovers every CronJob in your cluster</li>
+            <li>Clean Prometheus metrics with zero configuration</li>
+            <li>Pre-built Grafana dashboards</li>
+            <li>Smart alert rules for failures and missed schedules</li>
+            <li>Under 50MB memory, under 0.05 CPU</li>
+            <li>Apache 2.0 licensed, no telemetry</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Sovereignty -->
+  <section class="sovereignty">
+    <div class="sovereignty-inner animate-fade-in delay-7">
+      <div class="sovereignty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h2>Your data never leaves your cluster.</h2>
+      <p>No SaaS dashboard phoning home. No vendor with a copy of your cluster topology. Varax runs entirely inside your cluster — air-gapped compatible, SOC2-ready, enterprise-approved.</p>
+      <code class="sovereignty-mono">$ netstat -an | grep varax → (no external connections)</code>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Varax Labs. All rights reserved. &nbsp;&middot;&nbsp; <a href="https://github.com/varaxlabs">GitHub</a></p>
+  </footer>
+
+  <!-- Terminal Animation Script -->
+  <script>
+    (function() {
+      const lines = [
+        { type: 'cmd', text: '<span class="t-prompt">$</span> <span class="t-cmd">helm install varax varaxlabs/operator</span>' },
+        { type: 'output', text: '<span class="t-muted">NAME: varax</span>' },
+        { type: 'output', text: '<span class="t-muted">STATUS: deployed</span>' },
+        { type: 'spacer' },
+        { type: 'cmd', text: '<span class="t-prompt">$</span> <span class="t-cmd">varax scan</span>' },
+        { type: 'output', text: '<span class="t-success">&#10003;</span> RBAC Configuration' },
+        { type: 'output', text: '<span class="t-success">&#10003;</span> Network Policies' },
+        { type: 'output', text: '<span class="t-success">&#10003;</span> Pod Security Standards' },
+        { type: 'output', text: '<span class="t-warning">&#9888;</span> Audit Logging <span class="t-muted">— not enabled</span>' },
+        { type: 'spacer' },
+        { type: 'output', text: 'Score: <span class="t-success">87/100</span> <span class="t-muted">— 1 action item</span>' },
+        { type: 'spacer' },
+        { type: 'cmd', text: '<span class="t-prompt">$</span> <span class="t-cmd">varax report --format pdf</span>' },
+        { type: 'output', text: '<span class="t-success">&#10003;</span> varax-soc2-report.pdf <span class="t-muted">(42 pages)</span>' },
+      ];
+
+      const terminal = document.getElementById('terminal');
+      let i = 0;
+      const baseDelay = 1200;
+
+      function addLine() {
+        if (i >= lines.length) {
+          // Add blinking cursor on last line
+          const lastChild = terminal.lastElementChild;
+          if (lastChild) lastChild.innerHTML += ' <span class="cursor"></span>';
+          return;
+        }
+
+        const line = lines[i];
+        const div = document.createElement('div');
+
+        if (line.type === 'spacer') {
+          div.className = 't-spacer';
+        } else {
+          div.className = 'terminal-line';
+          div.innerHTML = line.text;
+          div.style.animationDelay = '0s';
+        }
+
+        terminal.appendChild(div);
+        i++;
+
+        const delay = line.type === 'cmd' ? 600 : line.type === 'spacer' ? 200 : 150;
+        setTimeout(addLine, delay);
+      }
+
+      // Start after page loads and animations settle
+      setTimeout(addLine, baseDelay);
+    })();
+  </script>
+
+</body>
+</html>
