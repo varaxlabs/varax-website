@@ -2,7 +2,7 @@
 title: "Why Your Kubernetes CronJobs Are Failing Silently"
 description: "CronJobs are one of the most under-monitored resources in Kubernetes. Here's why they fail without anyone noticing, and what to do about it."
 date: 2026-02-25
-author: "Varax Labs"
+author: "Varax"
 tags: ["kubernetes", "cronjobs", "reliability", "devops"]
 ---
 
@@ -60,9 +60,9 @@ kube_job_status_failed{job_name=~".*"} > 0
 
 The problem: kube-state-metrics provides job-level metrics, but the CronJob-level view requires complex queries that join across multiple metrics. You'll spend hours building the dashboards and alerts you need.
 
-### Option 2: Use Varax Monitor
+### Option 2: Use Onax
 
-[Varax Monitor](/monitor) was built specifically for this problem. One Helm command gives you:
+[Onax](/monitor) was built specifically for this problem. One Helm command gives you:
 
 - Automatic discovery of every CronJob in your cluster
 - Per-CronJob success/failure tracking
@@ -71,7 +71,7 @@ The problem: kube-state-metrics provides job-level metrics, but the CronJob-leve
 - Pre-built Grafana dashboards and alert rules
 
 ```bash
-helm install varax-monitor varaxlabs/varax-monitor
+helm install onax varaxlabs/onax
 ```
 
 It's free, open-source (Apache 2.0), and uses less than 50MB of memory.
@@ -88,4 +88,4 @@ It's free, open-source (Apache 2.0), and uses less than 50MB of memory.
 
 CronJobs are critical infrastructure that runs without supervision. That's exactly why they need monitoring. The next time someone asks "has the nightly backup been running?", you should be able to answer instantly — not by SSH-ing into a cluster and running `kubectl describe`.
 
-[Get started with Varax Monitor](/docs/monitor/quickstart) — it takes 60 seconds.
+[Get started with Onax](/docs/monitor/quickstart) — it takes 60 seconds.

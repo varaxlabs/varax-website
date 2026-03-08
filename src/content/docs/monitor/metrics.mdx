@@ -1,13 +1,13 @@
 ---
 title: Metrics Reference
-description: Complete reference for all Prometheus metrics exported by Varax Monitor.
+description: Complete reference for all Prometheus metrics exported by Onax.
 section: monitor
 order: 2
 ---
 
 ## Overview
 
-Varax Monitor exports Prometheus metrics for every CronJob in your cluster. All metrics are labeled with `namespace` and `cronjob` for easy filtering and aggregation.
+Onax exports Prometheus metrics for every CronJob in your cluster. All metrics are labeled with `namespace` and `cronjob` for easy filtering and aggregation.
 
 ## Metrics
 
@@ -70,6 +70,6 @@ sum(rate(cronjob_execution_total[7d])) by (cronjob)
 
 ## Relationship to kube-state-metrics
 
-Varax Monitor complements kube-state-metrics — it doesn't replace it. kube-state-metrics provides general Kubernetes object state (pod counts, deployment replicas, etc.). Varax Monitor adds CronJob-specific execution tracking that kube-state-metrics doesn't cover: execution duration, missed schedules, and per-run success/failure tracking.
+Onax complements kube-state-metrics — it doesn't replace it. kube-state-metrics provides general Kubernetes object state (pod counts, deployment replicas, etc.). Onax adds CronJob-specific execution tracking that kube-state-metrics doesn't cover: execution duration, missed schedules, and per-run success/failure tracking.
 
 You can run both side by side with no conflicts.

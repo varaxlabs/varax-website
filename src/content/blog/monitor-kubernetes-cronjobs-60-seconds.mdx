@@ -2,13 +2,13 @@
 title: "Monitor All Your Kubernetes CronJobs in 60 Seconds"
 description: "How to set up complete CronJob monitoring with Prometheus metrics, Grafana dashboards, and alerting — with a single Helm command."
 date: 2026-03-01
-author: "Varax Labs"
+author: "Varax"
 tags: ["kubernetes", "monitoring", "cronjobs", "prometheus"]
 ---
 
 If you're running CronJobs on Kubernetes, you probably don't have great visibility into whether they're actually working. Most teams discover failures when something downstream breaks — a missing report, stale data, or an angry Slack message from a stakeholder.
 
-In this post, we'll show you how to get complete CronJob observability in your cluster in under 60 seconds using [Varax Monitor](https://github.com/varaxlabs/varax-monitor), a free, open-source tool that automatically discovers and monitors every CronJob.
+In this post, we'll show you how to get complete CronJob observability in your cluster in under 60 seconds using [Onax](https://github.com/varaxlabs/onax), a free, open-source tool that automatically discovers and monitors every CronJob.
 
 ## The Problem with CronJob Monitoring
 
@@ -23,14 +23,14 @@ You can build all of this yourself with PromQL queries against kube-state-metric
 
 ## The One-Command Solution
 
-Varax Monitor handles all of this automatically:
+Onax handles all of this automatically:
 
 ```bash
 helm repo add varaxlabs https://charts.varax.io
-helm install varax-monitor varaxlabs/varax-monitor
+helm install onax varaxlabs/onax
 ```
 
-Within seconds, Varax Monitor:
+Within seconds, Onax:
 
 1. **Discovers every CronJob** in your cluster using Kubernetes Informers
 2. **Tracks executions** — success, failure, duration, and timing
@@ -43,7 +43,7 @@ No per-job configuration. No annotations. No YAML to write. It just works.
 
 ### Prometheus Metrics
 
-Varax Monitor exports these metrics for every CronJob in your cluster:
+Onax exports these metrics for every CronJob in your cluster:
 
 | Metric | What it tells you |
 |--------|-------------------|
@@ -74,7 +74,7 @@ Copy-paste alert rules for the most common failure modes:
 
 ## Resource Footprint
 
-Varax Monitor is designed to be invisible in your cluster:
+Onax is designed to be invisible in your cluster:
 
 - **Memory**: less than 50MB
 - **CPU**: less than 0.05 cores
@@ -83,8 +83,8 @@ Varax Monitor is designed to be invisible in your cluster:
 
 ## Getting Started
 
-Full installation guide: [Varax Monitor Quickstart](/docs/monitor/quickstart)
+Full installation guide: [Onax Quickstart](/docs/monitor/quickstart)
 
-GitHub: [github.com/varaxlabs/varax-monitor](https://github.com/varaxlabs/varax-monitor)
+GitHub: [github.com/varaxlabs/onax](https://github.com/varaxlabs/onax)
 
 It's Apache 2.0 licensed — free forever, no strings attached.

@@ -18,7 +18,7 @@ export async function sendLicenseEmail({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Varax Labs <licenses@varax.io>",
+      from: "Varax <licenses@varax.io>",
       to: [to],
       subject: "Your Varax License Key",
       html: `
@@ -27,7 +27,7 @@ export async function sendLicenseEmail({
 <pre><code>varax license activate ${escapeHtml(licenseKey)}</code></pre>
 <p>Store this key securely — it is tied to your subscription and cannot be recovered if lost.</p>
 <p>If you have any questions, reply to this email or visit <a href="https://varax.io/docs">our documentation</a>.</p>
-<p>— Varax Labs</p>
+<p>— Varax</p>
       `.trim(),
     }),
   });

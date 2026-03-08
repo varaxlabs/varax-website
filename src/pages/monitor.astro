@@ -6,23 +6,21 @@ import SectionHeading from '@components/SectionHeading.astro';
 import CrossPromo from '@components/CrossPromo.astro';
 ---
 
-<Base title="Varax Monitor" description="Free Kubernetes CronJob monitoring. Auto-discover every CronJob in your cluster. Track execution, detect failures, alert on missed schedules.">
+<Base title="Onax" description="Open-source CronJob monitoring for Kubernetes. Know when jobs fail, hang, or miss their schedule — before your users do.">
 
   <!-- Hero -->
   <section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
     <div class="text-center">
       <p class="text-sm font-semibold uppercase tracking-wider text-accent mb-3">Open Source</p>
       <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-light-text leading-tight mb-4">
-        Free Kubernetes CronJob monitoring.<br class="hidden sm:block" />
-        Zero config. Zero cost.
+        Open-source CronJob monitoring<br class="hidden sm:block" /> for Kubernetes.
       </h1>
       <p class="text-lg text-light-text-secondary max-w-2xl mx-auto mb-8">
-        Auto-discover every CronJob in your cluster. Track execution, detect failures,
-        alert on missed schedules — all through Prometheus and Grafana. Installs in 60 seconds.
+        Know when jobs fail, hang, or miss their schedule — before your users do.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <Button href="/docs/monitor/quickstart" size="lg">Install Now</Button>
-        <Button href="https://github.com/varaxlabs/varax-monitor" variant="secondary" size="lg" external>View on GitHub</Button>
+        <Button href="https://github.com/varaxlabs/onax" variant="secondary" size="lg" external>View on GitHub</Button>
       </div>
     </div>
   </section>
@@ -47,10 +45,10 @@ import CrossPromo from '@components/CrossPromo.astro';
             One Helm command. Zero configuration.
           </h3>
           <p class="text-base text-light-text-secondary mb-4">
-            Every CronJob monitored automatically. Varax Monitor uses Kubernetes Informers to detect every CronJob in your cluster
+            Every CronJob monitored automatically. Onax uses Kubernetes Informers to detect every CronJob in your cluster
             and exports clean Prometheus metrics. No per-job setup. No annotations. It just works.
           </p>
-          <CodeBlock title="terminal" code="$ helm install varax-monitor varaxlabs/varax-monitor\n✓ Monitoring 14 CronJobs across 3 namespaces" />
+          <CodeBlock title="terminal" code="$ helm install onax varaxlabs/onax\n✓ Monitoring 14 CronJobs across 3 namespaces" />
         </div>
       </div>
     </div>
@@ -67,7 +65,7 @@ import CrossPromo from '@components/CrossPromo.astro';
         { title: 'Smart Alert Rules', desc: 'Pre-configured Prometheus alerts for job failures, missed schedules, abnormal duration, and stuck jobs.' },
         { title: 'Prometheus Native', desc: 'Exports clean, well-labeled Prometheus metrics. Works with your existing monitoring stack. No new tools to learn.' },
         { title: 'Lightweight', desc: 'Under 50MB memory, under 0.05 CPU. Read-only cluster access. No persistent storage needed.' },
-        { title: '100% Free', desc: 'Apache 2.0 licensed. No per-job pricing. No telemetry. No vendor lock-in.' },
+        { title: 'Open Source', desc: 'Apache 2.0 licensed. No per-job pricing. No telemetry. No vendor lock-in.' },
       ].map((feature) => (
         <div class="p-6 rounded-xl border border-light-border bg-light-surface">
           <h3 class="text-base font-semibold text-light-text mb-2">{feature.title}</h3>
@@ -121,15 +119,15 @@ import CrossPromo from '@components/CrossPromo.astro';
   <section class="border-t border-light-border bg-light-surface">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
       <h2 class="text-2xl sm:text-3xl font-semibold text-light-text mb-4">
-        Monitor every CronJob in your cluster. Free forever.
+        Monitor every CronJob in your cluster.
       </h2>
       <div class="max-w-xl mx-auto mb-8">
-        <CodeBlock title="terminal">$ helm install varax-monitor varaxlabs/varax-monitor</CodeBlock>
+        <CodeBlock title="terminal">$ helm install onax varaxlabs/onax</CodeBlock>
       </div>
       <div class="flex flex-wrap items-center justify-center gap-3">
         <Button href="/docs/monitor/quickstart" size="lg">Install Now</Button>
         <Button href="/docs/monitor/quickstart" variant="secondary" size="lg">Read the Docs</Button>
-        <Button href="https://github.com/varaxlabs/varax-monitor" variant="ghost" size="lg" external>Star on GitHub</Button>
+        <Button href="https://github.com/varaxlabs/onax" variant="ghost" size="lg" external>Star on GitHub</Button>
       </div>
     </div>
   </section>

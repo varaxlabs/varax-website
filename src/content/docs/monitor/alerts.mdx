@@ -7,7 +7,7 @@ order: 4
 
 ## Overview
 
-Varax Monitor includes pre-built alert rules for Prometheus AlertManager. Copy these into your AlertManager configuration to get notified about CronJob failures, missed schedules, and performance issues.
+Onax includes pre-built alert rules for Prometheus AlertManager. Copy these into your AlertManager configuration to get notified about CronJob failures, missed schedules, and performance issues.
 
 ## Alert Rules
 
@@ -92,7 +92,7 @@ Combine all rules into a single group:
 
 ```yaml
 groups:
-  - name: varax-monitor
+  - name: onax
     rules:
       - alert: CronJobFailed
         expr: cronjob_last_execution_status == 0

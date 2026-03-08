@@ -7,7 +7,7 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
-    author: z.string().default('Varax Labs'),
+    author: z.string().default('Varax'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),

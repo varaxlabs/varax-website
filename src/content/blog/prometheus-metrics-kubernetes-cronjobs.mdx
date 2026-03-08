@@ -2,7 +2,7 @@
 title: "Prometheus Metrics for Kubernetes CronJobs: A Complete Guide"
 description: "Everything you need to know about monitoring Kubernetes CronJobs with Prometheus — from basic kube-state-metrics queries to purpose-built CronJob exporters."
 date: 2026-02-20
-author: "Varax Labs"
+author: "Varax"
 tags: ["prometheus", "kubernetes", "cronjobs", "monitoring", "grafana"]
 ---
 
@@ -88,9 +88,9 @@ While kube-state-metrics provides raw data, it has significant limitations for C
 4. **No true missed schedule detection** — you can approximate it, but it's unreliable
 5. **High cardinality** — Job names include timestamps (e.g., `nightly-backup-28486760`), which creates new time series constantly
 
-## Purpose-Built CronJob Metrics with Varax Monitor
+## Purpose-Built CronJob Metrics with Onax
 
-[Varax Monitor](/monitor) was built to fill exactly these gaps. It watches CronJob executions directly and exports clean, purpose-built metrics:
+[Onax](/monitor) was built to fill exactly these gaps. It watches CronJob executions directly and exports clean, purpose-built metrics:
 
 | Metric | Type | Description |
 |--------|------|-------------|
@@ -115,7 +115,7 @@ kube_job_status_failed > 0
   kube_job_owner{owner_kind="CronJob"}
 ```
 
-With Varax Monitor:
+With Onax:
 
 ```text
 # Direct, simple query
@@ -134,7 +134,7 @@ With kube-state-metrics:
   > 300
 ```
 
-With Varax Monitor:
+With Onax:
 
 ```text
 cronjob_last_execution_duration_seconds > 300
@@ -142,7 +142,7 @@ cronjob_last_execution_duration_seconds > 300
 
 ## Setting Up a Complete Dashboard
 
-Whether you use kube-state-metrics alone or Varax Monitor, your Grafana dashboard should include:
+Whether you use kube-state-metrics alone or Onax, your Grafana dashboard should include:
 
 1. **Overview table** — all CronJobs with last status, last run time, and next scheduled time
 2. **Failure timeline** — when and which CronJobs have failed
@@ -150,7 +150,7 @@ Whether you use kube-state-metrics alone or Varax Monitor, your Grafana dashboar
 4. **Missed schedule alerts** — any CronJobs that didn't fire when expected
 5. **Active jobs** — currently running CronJob executions
 
-Varax Monitor includes a pre-built Grafana dashboard with all of these panels. Install it with one command and customize as needed.
+Onax includes a pre-built Grafana dashboard with all of these panels. Install it with one command and customize as needed.
 
 ## Getting Started
 
@@ -158,7 +158,7 @@ If you want the simplest path to CronJob observability:
 
 ```bash
 helm repo add varaxlabs https://charts.varax.io
-helm install varax-monitor varaxlabs/varax-monitor
+helm install onax varaxlabs/onax
 ```
 
 It's free, open-source (Apache 2.0), and deploys in under 60 seconds. [Read the full quickstart](/docs/monitor/quickstart).
