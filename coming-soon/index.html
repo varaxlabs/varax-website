@@ -570,7 +570,7 @@
       Auto-discovers misconfigurations. Maps to SOC2 controls. Generates the PDF your auditor wants. And your data never leaves your cluster.
     </p>
     <div class="animate-fade-up delay-4">
-      <form class="email-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Added to waitlist'; this.querySelector('button').style.background='#16A34A'; this.querySelector('input').disabled=true;">
+      <form class="email-form" onsubmit="event.preventDefault(); var e=this.querySelector('input').value, b=this.querySelector('button'); b.disabled=true; b.textContent='Joining...'; fetch('/api/waitlist/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e})}).then(function(r){if(r.ok){b.textContent='You\u2019re on the list';b.style.background='#16A34A';}else{b.textContent='Try again';b.style.background='var(--accent)';b.disabled=false;}}).catch(function(){b.textContent='Try again';b.style.background='var(--accent)';b.disabled=false;});">
         <input type="email" class="email-input" placeholder="you@company.com" required>
         <button type="submit" class="email-btn">Get Early Access</button>
       </form>
