@@ -43,6 +43,15 @@ const proTier = {
   ],
 };
 
+const enterpriseFeatures = [
+  { title: 'Conversational CLI', desc: 'Ask Varax why a control is failing — in plain English.' },
+  { title: 'On-Cluster AI', desc: 'No external API calls. Intelligence runs inside your cluster.' },
+  { title: 'Remediation as Code', desc: 'Generate exact kubectl commands and YAML to fix findings.' },
+  { title: 'Time-Travel Compliance', desc: '13+ months of compliance history for auditors.' },
+  { title: 'Multi-Cluster Support', desc: 'Aggregate compliance across all clusters.' },
+  { title: 'Dedicated Support', desc: 'Private Slack channel with SLA.' },
+];
+
 const faqs = [
   {
     q: 'What happens when my license expires?',
@@ -67,6 +76,22 @@ const faqs = [
   {
     q: 'Do you offer annual billing?',
     a: 'Yes — annual billing saves you two months ($298/year). Toggle the pricing above to see annual rates.',
+  },
+  {
+    q: 'When will Enterprise be available?',
+    a: 'We\'re targeting Q3 2026. Join the waitlist to be notified when it launches and to get early access.',
+  },
+  {
+    q: 'What does "on-cluster AI" mean?',
+    a: 'Unlike tools that send your data to external AI providers, Varax Enterprise runs a specialized compliance model entirely inside your Kubernetes cluster. Your scan results, findings, and questions never leave your infrastructure. This is critical for air-gapped environments and regulated industries.',
+  },
+  {
+    q: 'Can I get Enterprise features in Pro?',
+    a: 'The conversational CLI and on-cluster AI require significant additional compute resources and are architected differently from the Pro tier. They\'ll remain Enterprise-only. However, all the core compliance scanning, evidence generation, and reporting in Pro will continue to improve.',
+  },
+  {
+    q: 'Is there a trial for Enterprise?',
+    a: 'We\'ll offer a 30-day trial for qualified companies when Enterprise launches. Join the waitlist to be notified.',
   },
 ];
 ---
@@ -100,7 +125,7 @@ const faqs = [
     </div>
 
     <!-- Pricing Cards -->
-    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
       <!-- Free -->
       <div class="p-8 rounded-xl border border-light-border bg-light-surface">
         <h2 class="text-xl font-semibold text-light-text mb-1">{freeTier.name}</h2>
@@ -136,6 +161,74 @@ const faqs = [
             <li class="flex items-start gap-2.5 text-sm text-light-text">
               <Fragment set:html={checkIcon} />
               {f.text}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Enterprise -->
+      <div id="enterprise" class="relative p-8 rounded-xl border border-light-border bg-light-surface opacity-90">
+        <span class="absolute -top-3 left-6 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-light-text-secondary text-white">Coming Q3 2026</span>
+        <h2 class="text-xl font-semibold text-light-text mb-1">Enterprise</h2>
+        <div class="mb-4">
+          <span class="text-lg font-semibold text-light-text-secondary">Contact Us</span>
+        </div>
+        <p class="text-sm text-light-text-secondary mb-6">Air-gapped intelligence for regulated industries. Everything in Pro, plus:</p>
+
+        <!-- Waitlist CTA — expands to inline form on click -->
+        <div id="enterprise-waitlist">
+          <button
+            id="waitlist-btn"
+            type="button"
+            class="w-full mb-8 inline-flex items-center justify-center rounded-lg border border-light-border bg-light-surface px-4 py-2.5 text-sm font-semibold text-light-text hover:border-accent hover:text-accent transition-colors"
+          >
+            Join the Waitlist &rarr;
+          </button>
+
+          <form id="waitlist-form" class="hidden mb-8 space-y-3">
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="you@company.com"
+              class="w-full rounded-lg border border-light-border bg-white px-3 py-2 text-sm text-light-text placeholder:text-light-text-secondary focus:outline-none focus:border-accent"
+            />
+            <input
+              type="text"
+              name="company"
+              placeholder="Company (optional)"
+              class="w-full rounded-lg border border-light-border bg-white px-3 py-2 text-sm text-light-text placeholder:text-light-text-secondary focus:outline-none focus:border-accent"
+            />
+            <select
+              name="clusters"
+              class="w-full rounded-lg border border-light-border bg-white px-3 py-2 text-sm text-light-text focus:outline-none focus:border-accent"
+            >
+              <option value="">How many clusters?</option>
+              <option value="1">1</option>
+              <option value="2-5">2-5</option>
+              <option value="6-10">6-10</option>
+              <option value="10+">10+</option>
+            </select>
+            <button
+              type="submit"
+              class="w-full inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white hover:bg-accent-dark transition-colors"
+            >
+              Join Waitlist
+            </button>
+            <p class="text-xs text-light-text-secondary text-center">No spam. Just launch updates.</p>
+          </form>
+
+          <div id="waitlist-success" class="hidden mb-8 rounded-lg border border-success/30 bg-success/5 p-4 text-center">
+            <svg class="w-5 h-5 text-success mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7" /></svg>
+            <p class="text-sm text-light-text">You're on the list. We'll email you when Enterprise launches.</p>
+          </div>
+        </div>
+
+        <ul class="space-y-3">
+          {enterpriseFeatures.map((f) => (
+            <li class="flex items-start gap-2.5 text-sm text-light-text">
+              <Fragment set:html={checkIcon} />
+              <span><strong class="font-semibold">{f.title}</strong> — {f.desc}</span>
             </li>
           ))}
         </ul>
@@ -194,4 +287,68 @@ const faqs = [
 
   initBillingToggle();
   document.addEventListener('astro:after-swap', initBillingToggle);
+</script>
+
+<script>
+  function initEnterpriseWaitlist() {
+    const btn = document.getElementById('waitlist-btn');
+    const form = document.getElementById('waitlist-form') as HTMLFormElement | null;
+    const success = document.getElementById('waitlist-success');
+    if (!btn || !form || !success) return;
+
+    btn.addEventListener('click', () => {
+      btn.classList.add('hidden');
+      form.classList.remove('hidden');
+      const emailInput = form.querySelector<HTMLInputElement>('input[name="email"]');
+      emailInput?.focus();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const email = formData.get('email') as string;
+      const company = formData.get('company') as string;
+      const clusters = formData.get('clusters') as string;
+
+      const submitBtn = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+      }
+
+      try {
+        const res = await fetch('/api/waitlist/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            tag: 'enterprise-waitlist',
+            ...(company && { company }),
+            ...(clusters && { clusters }),
+          }),
+        });
+
+        if (res.ok) {
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Something went wrong. Please try again.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Join Waitlist';
+          }
+        }
+      } catch {
+        alert('Something went wrong. Please try again.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Join Waitlist';
+        }
+      }
+    });
+  }
+
+  initEnterpriseWaitlist();
+  document.addEventListener('astro:after-swap', initEnterpriseWaitlist);
 </script>

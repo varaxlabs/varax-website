@@ -6,20 +6,31 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const headers = { 'Content-Type': 'application/json' };
 
   try {
-    const { email } = (await request.json()) as { email?: string };
+    const { email, tag, company, clusters } = (await request.json()) as {
+      email?: string;
+      tag?: string;
+      company?: string;
+      clusters?: string;
+    };
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return new Response(JSON.stringify({ error: 'Invalid email' }), { status: 400, headers });
     }
 
-    const key = `waitlist:${email.toLowerCase().trim()}`;
+    const normalizedEmail = email.toLowerCase().trim();
+    const prefix = tag ? `waitlist:${tag}` : 'waitlist';
+    const key = `${prefix}:${normalizedEmail}`;
     const existing = await env.LICENSE_KV.get(key);
 
     if (!existing) {
-      await env.LICENSE_KV.put(key, JSON.stringify({
-        email: email.toLowerCase().trim(),
+      const entry: Record<string, string> = {
+        email: normalizedEmail,
         signedUp: new Date().toISOString(),
-      }));
+      };
+      if (tag) entry.tag = tag;
+      if (company) entry.company = company.trim();
+      if (clusters) entry.clusters = clusters;
+      await env.LICENSE_KV.put(key, JSON.stringify(entry));
     }
 
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
