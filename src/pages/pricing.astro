@@ -44,7 +44,7 @@ const proTier = {
 };
 
 const enterpriseFeatures = [
-  { title: 'Conversational CLI', desc: 'Ask Varax why a control is failing — in plain English.' },
+  { title: 'Conversational CLI', desc: 'Ask Varax why a control is failing - in plain English.' },
   { title: 'On-Cluster AI', desc: 'No external API calls. Intelligence runs inside your cluster.' },
   { title: 'Remediation as Code', desc: 'Generate exact kubectl commands and YAML to fix findings.' },
   { title: 'Time-Travel Compliance', desc: '13+ months of compliance history for auditors.' },
@@ -228,7 +228,7 @@ const faqs = [
           {enterpriseFeatures.map((f) => (
             <li class="flex items-start gap-2.5 text-sm text-light-text">
               <Fragment set:html={checkIcon} />
-              <span><strong class="font-semibold">{f.title}</strong> — {f.desc}</span>
+              <span><strong class="font-semibold">{f.title}</strong> - {f.desc}</span>
             </li>
           ))}
         </ul>

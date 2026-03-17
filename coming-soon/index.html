@@ -464,91 +464,27 @@
       margin-top: 0.25rem;
     }
 
-    /* ── Enterprise teaser ── */
-    .enterprise-teaser {
-      max-width: 72rem;
-      margin: 0 auto;
-      padding: 0 1.5rem 5rem;
+    /* ── Enterprise card ── */
+    .product-card--enterprise {
+      grid-column: 1 / -1;
     }
 
-    .enterprise-inner {
-      border: 1px solid var(--border);
-      border-radius: 0.75rem;
-      background: white;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-
-    .enterprise-label {
-      font-size: 0.625rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
+    .product-tag.coming {
       background: rgba(107, 114, 128, 0.1);
       color: var(--text-secondary);
-      margin-bottom: 1rem;
     }
 
-    .enterprise-inner h2 {
-      font-size: clamp(1.25rem, 3vw, 1.5rem);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 1rem;
-    }
-
-    .enterprise-body {
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
-      max-width: 36rem;
-      margin: 0 auto 1.5rem;
-      line-height: 1.6;
-    }
-
-    .enterprise-features {
-      list-style: none;
-      display: inline-grid;
+    .product-features--two-col {
+      display: grid;
       grid-template-columns: 1fr;
       gap: 0.5rem;
-      text-align: left;
-      margin-bottom: 1.5rem;
     }
 
     @media (min-width: 640px) {
-      .enterprise-features { grid-template-columns: 1fr 1fr; gap: 0.5rem 2rem; }
-    }
-
-    .enterprise-features li {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      line-height: 1.45;
-    }
-
-    .enterprise-features li::before {
-      content: '';
-      flex-shrink: 0;
-      width: 0.375rem;
-      height: 0.375rem;
-      margin-top: 0.375rem;
-      border-radius: 50%;
-      background: var(--text-secondary);
-    }
-
-    .enterprise-features li strong {
-      color: var(--text);
-    }
-
-    .enterprise-note {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      max-width: 32rem;
-      margin: 0 auto;
-      line-height: 1.55;
+      .product-features--two-col {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem 2rem;
+      }
     }
 
     /* ── Data sovereignty banner ── */
@@ -637,8 +573,6 @@
       .products-inner { padding: 3rem 1rem; }
       .highlights { padding: 3rem 1rem; }
       .sovereignty-inner { padding: 3rem 1rem; }
-      .enterprise-teaser { padding: 0 1rem 3rem; }
-      .enterprise-inner { padding: 2rem 1.25rem; }
     }
   </style>
 </head>
@@ -750,26 +684,25 @@
           <a href="https://github.com/varaxlabs/onax" target="_blank" rel="noopener noreferrer" class="product-cta">Get Onax now on GitHub &rarr;</a>
         </div>
 
-      </div>
-    </div>
-  </section>
+        <div class="product-card product-card--enterprise">
+          <div class="enterprise-header">
+            <div>
+              <span class="product-tag coming">Coming Q3 2026</span>
+              <h3>Varax Enterprise</h3>
+              <p class="subtitle">Ask Varax questions in plain English. Get answers without your data ever leaving the cluster.</p>
+            </div>
+          </div>
+          <ul class="product-features product-features--two-col">
+            <li>Conversational CLI - ask why a control is failing</li>
+            <li>On-cluster AI - no external API calls, ever</li>
+            <li>Remediation as code - exact kubectl commands and YAML</li>
+            <li>Time-travel compliance - 13+ months of history</li>
+            <li>Multi-cluster support - aggregate all clusters</li>
+            <li>Dedicated support - private Slack channel with SLA</li>
+          </ul>
+        </div>
 
-  <!-- Enterprise Teaser -->
-  <section class="enterprise-teaser">
-    <div class="enterprise-inner">
-      <p class="enterprise-label">Coming Q3 2026</p>
-      <h2>Enterprise: Ask Varax. Stay Air-Gapped.</h2>
-      <p class="enterprise-body">
-        The Pro CLI gives you compliance reports. Enterprise lets you have a conversation. Ask why a control is failing. Get the kubectl command to fix it. All without your data ever leaving the cluster.
-      </p>
-      <ul class="enterprise-features">
-        <li><strong>Conversational CLI</strong> &mdash; Ask Varax why a control is failing, in plain English</li>
-        <li><strong>On-Cluster AI</strong> &mdash; No external API calls. Intelligence runs inside your cluster</li>
-        <li><strong>Remediation as Code</strong> &mdash; Generate exact kubectl commands and YAML to fix findings</li>
-        <li><strong>Time-Travel Compliance</strong> &mdash; 13+ months of compliance history for auditors</li>
-        <li><strong>Multi-Cluster Support</strong> &mdash; Aggregate compliance across all clusters</li>
-      </ul>
-      <p class="enterprise-note">No external AI APIs. No dashboards collecting your security posture. Just you, your cluster, and a compliance tool that respects your boundaries.</p>
+      </div>
     </div>
   </section>
 
