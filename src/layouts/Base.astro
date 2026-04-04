@@ -45,6 +45,9 @@ const fullTitle = title === 'Varax' ? title : `${title} | Varax`;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
 
+    <!-- Analytics -->
+    <script defer data-domain="varax.io" src="https://plausible.io/js/script.js"></script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
