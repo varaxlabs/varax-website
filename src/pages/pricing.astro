@@ -329,8 +329,12 @@ const faqs = [
         });
 
         if (res.ok) {
-          form.classList.add('hidden');
-          success.classList.remove('hidden');
+          form.classList.add('fade-out');
+          form.addEventListener('animationend', () => {
+            form.classList.add('hidden');
+            success.classList.remove('hidden');
+            success.classList.add('fade-in');
+          }, { once: true });
         } else {
           const data = await res.json();
           alert(data.error || 'Something went wrong. Please try again.');
@@ -352,3 +356,16 @@ const faqs = [
   initEnterpriseWaitlist();
   document.addEventListener('astro:after-swap', initEnterpriseWaitlist);
 </script>
+
+<style>
+  @keyframes fadeOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .fade-out { animation: fadeOut 300ms ease-out forwards; }
+  .fade-in { animation: fadeIn 300ms ease-out forwards; }
+</style>
