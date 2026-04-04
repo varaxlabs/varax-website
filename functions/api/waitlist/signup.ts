@@ -1,5 +1,6 @@
 interface Env {
   LICENSE_KV: KVNamespace;
+  BREVO_API_KEY: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -31,6 +32,27 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       if (company) entry.company = company.trim();
       if (clusters) entry.clusters = clusters;
       await env.LICENSE_KV.put(key, JSON.stringify(entry));
+    }
+
+    // Add contact to Brevo "varax-interest" list
+    if (env.BREVO_API_KEY) {
+      const attributes: Record<string, string> = {};
+      if (company) attributes.COMPANY = company.trim();
+      if (clusters) attributes.CLUSTERS = clusters;
+
+      await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'api-key': env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          listIds: [2],
+          updateEnabled: true,
+          ...(Object.keys(attributes).length > 0 && { attributes }),
+        }),
+      });
     }
 
     return new Response(JSON.stringify({ ok: true }), { status: 200, headers });
