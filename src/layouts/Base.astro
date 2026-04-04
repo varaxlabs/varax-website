@@ -46,7 +46,11 @@ const fullTitle = title === 'Varax' ? title : `${title} | Varax`;
     <meta name="twitter:image" content={new URL(ogImage, Astro.site)} />
 
     <!-- Analytics -->
-    <script is:inline defer data-domain="varax.io" src="https://plausible.io/js/script.js"></script>
+    <script is:inline async src="https://plausible.io/js/pa-N1s8B0mW8uu6m-ulYaMHS.js"></script>
+    <script is:inline>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
     <script is:inline>
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
